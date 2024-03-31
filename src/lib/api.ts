@@ -1,4 +1,5 @@
 import { CONFIG, EnvironmentName } from '@/config';
+import { assert } from '@/lib/utils';
 import axios from 'axios';
 import { z } from 'zod';
 
@@ -76,9 +77,7 @@ function getBaseUrl() {
         'environment',
     ) as EnvironmentName | null;
 
-    if (environment === null) {
-        throw new Error('Could not get API base URL!');
-    }
+    assert(environment !== null, 'Could not find a selected environment!');
 
     return CONFIG.environments[environment];
 }

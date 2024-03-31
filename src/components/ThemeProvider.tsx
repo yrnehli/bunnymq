@@ -1,4 +1,4 @@
-import { expr } from "@/lib/utils";
+import { assert, expr } from "@/lib/utils";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type Theme = "dark" | "light" | "system";
@@ -68,10 +68,11 @@ export function ThemeProvider({
 export const useTheme = () => {
     const context = useContext(ThemeProviderContext);
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (context === undefined) {
-        throw new Error("useTheme must be used within a ThemeProvider");
-    }
+    assert(
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        context !== undefined,
+        "useTheme must be used within a ThemeProvider",
+    );
 
     return context;
 };
