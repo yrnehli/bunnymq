@@ -1,5 +1,6 @@
 import { CONFIG, EnvironmentName } from '@/config';
 import axios from 'axios';
+import { z } from 'zod';
 
 export type Queue = {
     name: string;
@@ -9,31 +10,34 @@ export type Queue = {
     total: number;
 };
 
-type RabbitMqQueue = {
-    name: string;
-    consumers: number;
-    messages: number;
-    messages_ready: number;
-    messages_unacknowledged: number;
-};
+const rabbitMqQueueSchema = z.object({
+    name: z.string(),
+    consumers: z.number(),
+    messages: z.number(),
+    messages_ready: z.number(),
+    messages_unacknowledged: z.number(),
+});
+
+const rabbitMqQueuesSchema = z.array(rabbitMqQueueSchema);
+
+type RabbitMqQueue = z.infer<typeof rabbitMqQueueSchema>;
 
 export function login(credentials: string): Promise<unknown> {
     return request('GET', 'whoami', { credentials });
 }
 
 export async function queues(): Promise<Queue[]> {
-    const rabbitMqQueues = await request<RabbitMqQueue[]>('GET', 'queues');
-    const queues = rabbitMqQueues.map(parseQueue);
+    const res = await request('GET', 'queues');
+    const rabbitMqQueues = rabbitMqQueuesSchema.parse(res);
+    const queues = rabbitMqQueues.map(transformQueue);
 
     return queues;
 }
 
 export async function queue(queueId: string): Promise<Queue> {
-    const rabbitMqQueue = await request<RabbitMqQueue>(
-        'GET',
-        `queues/%2F/${queueId}`,
-    );
-    const queue = parseQueue(rabbitMqQueue);
+    const res = await request('GET', `queues/%2F/${queueId}`);
+    const rabbitMqQueue = rabbitMqQueueSchema.parse(res);
+    const queue = transformQueue(rabbitMqQueue);
 
     return queue;
 }
@@ -57,7 +61,7 @@ export async function publish(routingKey: string, payload: string) {
     });
 }
 
-function parseQueue(rabbitMqQueue: RabbitMqQueue): Queue {
+function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue {
     return {
         name: rabbitMqQueue.name,
         consumers: rabbitMqQueue.consumers,
@@ -79,12 +83,12 @@ function getBaseUrl() {
     return CONFIG.environments[environment];
 }
 
-async function request<T, D = unknown>(
+async function request<T = unknown>(
     method: 'GET' | 'POST',
     endpoint: string,
     options: {
         credentials?: string;
-        data?: D;
+        data?: T;
     } = {},
 ) {
     const { credentials, data } = options;
@@ -101,5 +105,5 @@ async function request<T, D = unknown>(
         data: data,
     });
 
-    return res.data as T;
+    return res.data as unknown;
 }
