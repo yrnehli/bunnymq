@@ -48,7 +48,7 @@ const computeCode = (code: string) => {
 };
 
 function Queue() {
-    const { theme } = useTheme();
+    const { appearance } = useTheme();
     const { queueId } = useParams({ from: "/queues/$queueId" });
     const [code, setCode] = useState(DEFAULT_CODE);
     const output = computeCode(code);
@@ -81,7 +81,7 @@ function Queue() {
                 <Editor
                     height="400px"
                     className="border"
-                    theme={theme === "dark" ? "vs-dark" : "light"}
+                    theme={appearance === "dark" ? "vs-dark" : "light"}
                     defaultLanguage="javascript"
                     defaultValue={DEFAULT_CODE}
                     onChange={(value) => value && setCode(value)}
@@ -102,7 +102,7 @@ function Queue() {
                     <SyntaxHighlighter
                         language="json"
                         style={
-                            theme === "dark"
+                            appearance === "dark"
                                 ? (vs2015 as ReactSyntaxHighlighterTheme)
                                 : (vs as ReactSyntaxHighlighterTheme)
                         }
