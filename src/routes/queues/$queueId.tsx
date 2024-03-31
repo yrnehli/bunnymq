@@ -29,11 +29,13 @@ export const Route = createFileRoute("/queues/$queueId")({
 });
 
 const DEFAULT_CODE = dedent`
+    const pprint = (obj) => JSON.stringify(obj, null, 4);
+
     const message = "foo";
     const payload = "bar";
 
     // Return a string to publish to the queue
-    return JSON.stringify([message, payload]);
+    return pprint([message, payload]);
 `;
 
 const computeCode = (code: string) => {
