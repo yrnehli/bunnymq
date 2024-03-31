@@ -18,10 +18,6 @@ import { toast } from "sonner";
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 SyntaxHighlighter.registerLanguage("json", json);
 
-type ReactSyntaxHighlighterTheme = {
-    [key: string]: React.CSSProperties;
-};
-
 export const Route = createFileRoute("/queues/$queueId")({
     component: Queue,
     beforeLoad: async ({ location }) => await checkAuthenticated(location.href),
@@ -103,11 +99,7 @@ function Queue() {
                 {output ? (
                     <SyntaxHighlighter
                         language="json"
-                        style={
-                            appearance === "dark"
-                                ? (vs2015 as ReactSyntaxHighlighterTheme)
-                                : (vs as ReactSyntaxHighlighterTheme)
-                        }
+                        style={appearance === "dark" ? vs2015 : vs}
                     >
                         {output}
                     </SyntaxHighlighter>
