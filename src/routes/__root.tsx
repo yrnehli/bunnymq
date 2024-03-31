@@ -12,7 +12,7 @@ export const Route = createRootRoute({
         <QueryClientProvider client={queryClient}>
             <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
                 <NavigationBar />
-                <main className="mx-8 my-8 md:mx-16 lg:mx-32 xl:mx-48 2xl:mx-64">
+                <main className="mx-8 my-8 pb-24 md:mx-16 lg:mx-32 xl:mx-48 2xl:mx-64">
                     <Outlet />
                 </main>
                 <Toaster />

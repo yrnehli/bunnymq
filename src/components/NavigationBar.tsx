@@ -63,8 +63,11 @@ export function NavigationBar() {
 
 function Breadcrumbs() {
     const router = useRouterState();
-    const routeFragments = router.location.pathname.split("/").filter(Boolean);
-    const { ref, overflow } = useOverflowDetector({});
+    const routeFragments = router.location.pathname
+        .split("/")
+        .filter(Boolean)
+        .map(decodeURIComponent);
+    const { ref, overflow } = useOverflowDetector();
 
     if (routeFragments.length < 2) {
         return false;

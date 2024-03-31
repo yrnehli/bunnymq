@@ -71,7 +71,9 @@ function Queue() {
     return (
         <div className="grid gap-y-8">
             <div>
-                <h1 className="mb-2 text-2xl font-bold">{queueId}</h1>
+                <h1 className="mb-2 max-w-xs truncate text-lg font-bold sm:text-2xl md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-xl">
+                    {queueId}
+                </h1>
                 <QueueInfo queue={data} />
             </div>
             <div>
@@ -80,7 +82,7 @@ function Queue() {
                 </div>
                 <Editor
                     height="400px"
-                    className="border"
+                    className="max-w-full border"
                     theme={appearance === "dark" ? "vs-dark" : "light"}
                     defaultLanguage="javascript"
                     defaultValue={DEFAULT_CODE}
