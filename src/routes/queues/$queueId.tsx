@@ -3,8 +3,7 @@ import { Spinner } from "@/components/Spinner";
 import { useTheme } from "@/components/ThemeProvider";
 import { QueueSkeleton } from "@/components/skeletons/QueueSkeleton";
 import { Button } from "@/components/ui/button";
-import * as API from "@/lib/api";
-import { Queue, queue } from "@/lib/api";
+import * as api from "@/lib/api";
 import { checkAuthenticated } from "@/routes/__root";
 import Editor from "@monaco-editor/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -56,11 +55,11 @@ function Queue() {
 
     const { isLoading, data } = useQuery({
         queryKey: ["queue", queueId],
-        queryFn: () => queue(queueId),
+        queryFn: () => api.queue(queueId),
     });
 
     const publishMessage = useMutation({
-        mutationFn: (message: string) => API.publish(queueId, message),
+        mutationFn: (message: string) => api.publish(queueId, message),
         onSuccess: () => toast("Successfully published message ✅"),
         onError: () => toast("Failed to publish message ⛔"),
     });
@@ -131,7 +130,7 @@ function Queue() {
 }
 
 type QueueInfoProps = {
-    queue: Queue;
+    queue: api.Queue;
 };
 
 function QueueInfo({ queue }: QueueInfoProps) {

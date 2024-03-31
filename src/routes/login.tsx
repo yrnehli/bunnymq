@@ -17,7 +17,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { ENVIRONMENT_NAMES } from "@/config";
-import * as API from "@/lib/api";
+import * as api from "@/lib/api";
 import { isAuthenticated } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -75,7 +75,7 @@ function Login() {
             sessionStorage.setItem("environment", values.environment);
             sessionStorage.setItem("credentials", credentials);
 
-            return API.login(credentials);
+            return api.login(credentials);
         },
         onSuccess: () => navigate({ to: next ?? "/", replace: true }),
         onError: () => {
