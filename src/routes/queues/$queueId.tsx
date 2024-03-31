@@ -155,7 +155,8 @@ function QueueInfo({ queue }: QueueInfoProps) {
                 <Ping variant={queue.unacked > 0 ? "red" : "green"} />
                 <small>
                     <span className="font-bold">{queue.unacked}</span>{" "}
-                    {queue.ready === 1 ? "message" : "messages"} unacknowledged
+                    {queue.unacked === 1 ? "message" : "messages"}{" "}
+                    unacknowledged
                 </small>
             </div>
         </div>
