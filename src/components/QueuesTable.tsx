@@ -92,11 +92,11 @@ const columns: ColumnDef<Queue>[] = [
 
 export type QueuesTableProps = {
     queryKey: unknown[];
-    columnVisibility?: VisibilityState;
+    columnVisibility: VisibilityState;
     onColumnVisibilityChange: (
         updateFn: Updater<VisibilityState, VisibilityState>,
     ) => void;
-    sorting?: SortingState;
+    sorting: SortingState;
     onSortingChange: (updateFn: Updater<SortingState, SortingState>) => void;
 };
 
@@ -141,7 +141,7 @@ export function QueuesTable({
                 <Input
                     placeholder="Filter queues..."
                     value={
-                        (columnFilters?.find((filter) => filter.id === "name")
+                        (columnFilters.find((filter) => filter.id === "name")
                             ?.value ?? "") as string
                     }
                     onChange={(event) =>

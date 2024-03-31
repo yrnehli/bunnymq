@@ -82,8 +82,9 @@ function Queues() {
             </div>
             <QueuesTable
                 queryKey={queryKey}
+                columnVisibility={search.columnVisibility ?? {}}
                 onColumnVisibilityChange={onColumnVisibilityChange}
-                sorting={search.sorting}
+                sorting={search.sorting ?? []}
                 onSortingChange={onSortingChange}
             />
         </>
