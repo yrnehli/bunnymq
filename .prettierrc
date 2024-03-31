@@ -1,0 +1,11 @@
+{
+    "trailingComma": "all",
+    "quoteProps": "preserve",
+    "plugins": [
+        "prettier-plugin-tailwindcss"
+    ],
+    "tailwindFunctions": [
+        "clsx",
+        "cn"
+    ]
+}

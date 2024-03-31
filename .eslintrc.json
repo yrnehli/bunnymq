@@ -1,0 +1,36 @@
+{
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/strict-type-checked",
+        "plugin:react-hooks/recommended",
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "prettier" // must be last to override other configs
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": ["./tsconfig.json", "./tsconfig.node.json"]
+    },
+    "rules": {
+        "@typescript-eslint/explicit-member-accessibility": "error",
+        "@typescript-eslint/switch-exhaustiveness-check": "error",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-confusing-void-expression": "off",
+        "@typescript-eslint/no-throw-literal": "off",
+        "@typescript-eslint/no-misused-promises": "off",
+        "prefer-const": "error",
+        "curly": "error",
+        "eqeqeq": "error"
+    }
+}
