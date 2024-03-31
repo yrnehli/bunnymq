@@ -53,7 +53,16 @@
     * {
         @apply border-border;
     }
+
     body {
         @apply bg-background text-foreground;
+    }
+
+    html.dark input[type="number"]::-webkit-inner-spin-button {
+        filter: invert(100%);
+    }
+
+    html.light input[type="number"]::-webkit-inner-spin-button {
+        filter: brightness(200%);
     }
 }
