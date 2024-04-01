@@ -1,6 +1,6 @@
 import { CONFIG, EnvironmentName } from '@/config';
 import { assert } from '@/lib/utils';
-import axios from 'axios';
+import axios, { Method } from 'axios';
 import { z } from 'zod';
 
 export type Queue = {
@@ -87,6 +87,16 @@ export async function publish(routingKey: string, payload: string) {
     });
 }
 
+export async function purge(queueId: string) {
+    return request('DELETE', `queues/%2F/${queueId}/contents`, {
+        data: {
+            vhost: '/',
+            name: queueId,
+            mode: 'purge',
+        },
+    });
+}
+
 function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue {
     return {
         name: rabbitMqQueue.name,
@@ -112,7 +122,7 @@ function getBaseUrl() {
 }
 
 async function request<T = unknown>(
-    method: 'GET' | 'POST',
+    method: Method,
     endpoint: string,
     options: {
         credentials?: string;

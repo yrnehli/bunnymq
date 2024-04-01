@@ -250,6 +250,12 @@ type PurgeMessagesProps = {
 };
 
 function PurgeMessages({ queue }: PurgeMessagesProps) {
+    const purge = useMutation({
+        mutationFn: () => api.purge(queue.name),
+        onSuccess: () => toast("Successfully purged messages ✅"),
+        onError: () => toast("Failed to purge messages ⛔"),
+    });
+
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -270,14 +276,20 @@ function PurgeMessages({ queue }: PurgeMessagesProps) {
                         Are you absolutely sure?
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
+                        This action cannot be undone. This will{" "}
+                        <span className="font-bold text-red-500">
+                            permanently
+                        </span>{" "}
                         purge the messages from{" "}
                         <span className="italic">{queue.name}</span>.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction variant="destructive">
+                    <AlertDialogAction
+                        variant="destructive"
+                        onClick={() => purge.mutate()}
+                    >
                         Continue
                     </AlertDialogAction>
                 </AlertDialogFooter>
