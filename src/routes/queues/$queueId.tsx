@@ -208,6 +208,14 @@ function ViewMessages({ queue, messages }: ViewMessagesProps) {
     const messagesCount = Math.min(10, messages.length);
     const singleMessage = messagesCount === 1;
 
+    const pprint = (s: string) => {
+        try {
+            return JSON.stringify(JSON.parse(s), null, 4);
+        } catch (e) {
+            return s;
+        }
+    };
+
     return (
         <Sheet>
             <SheetTrigger>
@@ -249,7 +257,7 @@ function ViewMessages({ queue, messages }: ViewMessagesProps) {
                                 <Copy className="h-[12px] w-[12px]" />
                             </button>
                         </div>
-                        <SyntaxHighlighter>{message}</SyntaxHighlighter>
+                        <SyntaxHighlighter>{pprint(message)}</SyntaxHighlighter>
                     </div>
                 ))}
             </SheetContent>
