@@ -1,5 +1,6 @@
 import { Ping } from "@/components/Ping";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { TooltipBasic } from "@/components/TooltipBasic";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -9,12 +10,6 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
@@ -39,22 +34,17 @@ export function NavigationBar() {
                 )}
                 <ThemeToggle />
                 {loggedIn && (
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Link to="/logout">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="focus-visible:ring-transparent"
-                                    >
-                                        <LogOut className="h-[1.2rem] w-[1.2rem]" />
-                                    </Button>
-                                </Link>
-                            </TooltipTrigger>
-                            <TooltipContent>Logout</TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
+                    <TooltipBasic message="Logout">
+                        <Link to="/logout">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="focus-visible:ring-transparent"
+                            >
+                                <LogOut className="h-[1.2rem] w-[1.2rem]" />
+                            </Button>
+                        </Link>
+                    </TooltipBasic>
                 )}
             </div>
         </nav>

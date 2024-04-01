@@ -1,6 +1,8 @@
 import { Ping } from "@/components/Ping";
+import { RefreshButton } from "@/components/RefreshButton";
 import { Spinner } from "@/components/Spinner";
 import { useTheme } from "@/components/ThemeProvider";
+import { TooltipBasic } from "@/components/TooltipBasic";
 import { QueueSkeleton } from "@/components/skeletons/QueueSkeleton";
 import { Button } from "@/components/ui/button";
 import * as api from "@/lib/api";
@@ -9,6 +11,7 @@ import Editor from "@monaco-editor/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import dedent from "dedent";
+import { OctagonX, Search } from "lucide-react";
 import { useState } from "react";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import json from "react-syntax-highlighter/dist/esm/languages/hljs/json";
@@ -66,11 +69,29 @@ function Queue() {
 
     return (
         <div className="grid gap-y-8">
-            <div>
-                <h1 className="mb-2 max-w-xs truncate text-lg font-bold sm:text-2xl md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-xl">
-                    {queueId}
-                </h1>
-                <QueueInfo queue={data} />
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="mb-2 max-w-xs truncate text-lg font-bold sm:text-2xl md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-xl">
+                        {queueId}
+                    </h1>
+                    <QueueInfo queue={data} />
+                </div>
+                <div className="block">
+                    <TooltipBasic
+                        message="Purge Messages"
+                        className="text-red-500"
+                    >
+                        <Button variant="ghost" size="icon">
+                            <OctagonX className="h-[1.2rem] w-[1.2rem] text-red-500" />
+                        </Button>
+                    </TooltipBasic>
+                    <TooltipBasic message="View Messages">
+                        <Button variant="ghost" size="icon">
+                            <Search className="h-[1.2rem] w-[1.2rem]" />
+                        </Button>
+                    </TooltipBasic>
+                    <RefreshButton />
+                </div>
             </div>
             <div>
                 <div className="mb-1 text-lg font-medium">
