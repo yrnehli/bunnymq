@@ -5,7 +5,16 @@ import { useTheme } from "@/components/ThemeProvider";
 import { TooltipBasic } from "@/components/TooltipBasic";
 import { QueueSkeleton } from "@/components/skeletons/QueueSkeleton";
 import { Button } from "@/components/ui/button";
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
 import * as api from "@/lib/api";
+import { cn } from "@/lib/utils";
 import { checkAuthenticated } from "@/routes/__root";
 import Editor from "@monaco-editor/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -72,14 +81,14 @@ function Queue() {
 
     return (
         <div className="grid gap-y-8">
-            <div className="flex items-center justify-between">
-                <div>
+            <div className="grid grid-cols-12 items-center justify-between">
+                <div className="col-span-12 md:col-span-10">
                     <h1 className="mb-2 max-w-xs truncate text-lg font-bold sm:text-2xl md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-xl">
                         {queueId}
                     </h1>
                     <QueueInfo queue={data} />
                 </div>
-                <div className="block">
+                <div className="col-span-12 mt-1 flex md:col-span-2 md:mt-0 md:justify-end">
                     <TooltipBasic
                         message="Purge Messages"
                         className="text-red-500"
@@ -88,11 +97,7 @@ function Queue() {
                             <OctagonX className="h-[1.2rem] w-[1.2rem] text-red-500" />
                         </Button>
                     </TooltipBasic>
-                    <TooltipBasic message="View Messages">
-                        <Button variant="ghost" size="icon">
-                            <Search className="h-[1.2rem] w-[1.2rem]" />
-                        </Button>
-                    </TooltipBasic>
+                    <ViewMessages queue={data} />
                     <RefreshButton
                         onClick={() => {
                             queryClient.removeQueries({ queryKey });
@@ -182,5 +187,41 @@ function QueueInfo({ queue }: QueueInfoProps) {
                 </small>
             </div>
         </div>
+    );
+}
+
+type ViewMessagesProps = {
+    queue: api.Queue;
+};
+
+function ViewMessages({ queue }: ViewMessagesProps) {
+    const messagesCount = Math.min(10, queue.total);
+    const singleMessage = messagesCount === 1;
+
+    return (
+        <Sheet>
+            <SheetTrigger>
+                <TooltipBasic message="View Messages">
+                    <div
+                        className={cn(
+                            "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+                            "h-10 w-10 hover:bg-accent hover:text-accent-foreground",
+                        )}
+                    >
+                        <Search className="h-[1.2rem] w-[1.2rem]" />
+                    </div>
+                </TooltipBasic>
+            </SheetTrigger>
+            <SheetContent className="max-w-3/4 sm:max-w-3/4 w-3/4 md:w-1/2">
+                <SheetHeader>
+                    <SheetTitle>Messages</SheetTitle>
+                    <SheetDescription>
+                        Displaying the latest {!singleMessage && messagesCount}{" "}
+                        {singleMessage ? "message" : "messages"} of{" "}
+                        <span className="italic">{queue.name}</span>.
+                    </SheetDescription>
+                </SheetHeader>
+            </SheetContent>
+        </Sheet>
     );
 }
