@@ -100,7 +100,7 @@ function Queue() {
                             <OctagonX className="h-[1.2rem] w-[1.2rem] text-red-500" />
                         </Button>
                     </TooltipBasic>
-                    <ViewMessages queue={queue} />
+                    <ViewMessages queue={queue} messages={messages} />
                     <RefreshButton
                         onClick={() => {
                             queryClient.removeQueries({
@@ -195,10 +195,11 @@ function QueueInfo({ queue }: QueueInfoProps) {
 
 type ViewMessagesProps = {
     queue: api.Queue;
+    messages: string[];
 };
 
-function ViewMessages({ queue }: ViewMessagesProps) {
-    const messagesCount = Math.min(10, queue.total);
+function ViewMessages({ queue, messages }: ViewMessagesProps) {
+    const messagesCount = Math.min(10, messages.length);
     const singleMessage = messagesCount === 1;
 
     return (
@@ -215,15 +216,26 @@ function ViewMessages({ queue }: ViewMessagesProps) {
                     </div>
                 </TooltipBasic>
             </SheetTrigger>
-            <SheetContent className="max-w-3/4 sm:max-w-3/4 w-3/4 md:w-1/2">
-                <SheetHeader>
+            <SheetContent className="w-full max-w-full overflow-scroll sm:max-w-full lg:w-3/4 2xl:w-1/2">
+                <SheetHeader className="mb-3">
                     <SheetTitle>Messages</SheetTitle>
                     <SheetDescription>
-                        Displaying the latest {!singleMessage && messagesCount}{" "}
+                        Displaying the latest{" "}
+                        <span className="font-bold">
+                            {!singleMessage && messagesCount}
+                        </span>{" "}
                         {singleMessage ? "message" : "messages"} of{" "}
                         <span className="italic">{queue.name}</span>.
                     </SheetDescription>
                 </SheetHeader>
+                {messages.map((message, i) => (
+                    <div key={i} className={cn("py-3", i > 0 && "border-t")}>
+                        <small className="uppercase opacity-60">
+                            Message {i + 1}
+                        </small>
+                        <SyntaxHighlighter>{message}</SyntaxHighlighter>
+                    </div>
+                ))}
             </SheetContent>
         </Sheet>
     );
