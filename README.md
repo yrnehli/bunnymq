@@ -17,8 +17,9 @@ A modern web interface to manage your RabbitMQ queues.
 
 1. Clone this repository.
 2. Setup `src/config.ts` to your liking (more info [here](#configuration)).
-3. To start the app: `npm run dev`.
-4. In a separate instance, `npm run proxy` if `useProxy` is `true` in your configuration.
+3. Install dependencies: `npm install`
+4. To start the app: `npm run dev`.
+5. In a separate instance, `npm run proxy` if `useProxy` is `true` in your configuration.
 
 ## Configuration
 
