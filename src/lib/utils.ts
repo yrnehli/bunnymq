@@ -17,3 +17,11 @@ export function assert(
         throw new Error(`Assertion failed${message && `: ${message}`}`);
     }
 }
+
+export function pprint(s: string) {
+    try {
+        return JSON.stringify(JSON.parse(s), null, 4);
+    } catch (e) {
+        return s;
+    }
+}

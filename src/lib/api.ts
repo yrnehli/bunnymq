@@ -1,5 +1,5 @@
 import { CONFIG, EnvironmentName } from '@/config';
-import { assert } from '@/lib/utils';
+import { assert, pprint } from '@/lib/utils';
 import axios, { Method } from 'axios';
 import { z } from 'zod';
 
@@ -108,7 +108,7 @@ function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue {
 }
 
 function transformMessages(rabbitMqMessages: RabbitMqMessages) {
-    return rabbitMqMessages.map((message) => message.payload);
+    return rabbitMqMessages.map((message) => message.payload).map(pprint);
 }
 
 function getBaseUrl() {
