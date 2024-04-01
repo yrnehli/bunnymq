@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import * as api from "@/lib/api";
 import { checkAuthenticated } from "@/routes/__root";
 import Editor from "@monaco-editor/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import dedent from "dedent";
 import { OctagonX, Search } from "lucide-react";
@@ -50,10 +50,13 @@ function Queue() {
     const { appearance } = useTheme();
     const { queueId } = useParams({ from: "/queues/$queueId" });
     const [code, setCode] = useState(DEFAULT_CODE);
+    const [refresh, setRefresh] = useState(false);
+    const queryClient = useQueryClient();
     const output = computeCode(code);
+    const queryKey = ["queue", queueId];
 
     const { data } = useQuery({
-        queryKey: ["queue", queueId],
+        queryKey,
         queryFn: () => api.queue(queueId),
     });
 
@@ -90,7 +93,12 @@ function Queue() {
                             <Search className="h-[1.2rem] w-[1.2rem]" />
                         </Button>
                     </TooltipBasic>
-                    <RefreshButton />
+                    <RefreshButton
+                        onClick={() => {
+                            queryClient.removeQueries({ queryKey });
+                            setRefresh(!refresh);
+                        }}
+                    />
                 </div>
             </div>
             <div>
@@ -102,7 +110,7 @@ function Queue() {
                     className="max-w-full border"
                     theme={appearance === "dark" ? "vs-dark" : "light"}
                     defaultLanguage="javascript"
-                    defaultValue={DEFAULT_CODE}
+                    defaultValue={code}
                     onChange={(value) => value && setCode(value)}
                     options={{
                         minimap: { enabled: false },
