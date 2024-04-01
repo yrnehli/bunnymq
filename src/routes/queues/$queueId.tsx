@@ -62,11 +62,19 @@ function Queue() {
     const [refresh, setRefresh] = useState(false);
     const queryClient = useQueryClient();
     const output = computeCode(code);
-    const queryKey = ["queue", queueId];
+    const queryKeys = {
+        queue: ["queue", queueId],
+        messages: ["messages", queueId],
+    } as const;
 
-    const { data } = useQuery({
-        queryKey,
+    const { data: queue } = useQuery({
+        queryKey: queryKeys.queue,
         queryFn: () => api.queue(queueId),
+    });
+
+    const { data: messages } = useQuery({
+        queryKey: queryKeys.messages,
+        queryFn: () => api.messages(queueId),
     });
 
     const publishMessage = useMutation({
@@ -75,7 +83,7 @@ function Queue() {
         onError: () => toast("Failed to publish message ⛔"),
     });
 
-    if (!data) {
+    if (!queue || !messages) {
         return <QueueSkeleton />;
     }
 
@@ -86,7 +94,7 @@ function Queue() {
                     <h1 className="mb-2 max-w-xs truncate text-lg font-bold sm:text-2xl md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-xl">
                         {queueId}
                     </h1>
-                    <QueueInfo queue={data} />
+                    <QueueInfo queue={queue} />
                 </div>
                 <div className="col-span-12 mt-1 flex md:col-span-2 md:mt-0 md:justify-end">
                     <TooltipBasic
@@ -97,10 +105,15 @@ function Queue() {
                             <OctagonX className="h-[1.2rem] w-[1.2rem] text-red-500" />
                         </Button>
                     </TooltipBasic>
-                    <ViewMessages queue={data} />
+                    <ViewMessages queue={queue} />
                     <RefreshButton
                         onClick={() => {
-                            queryClient.removeQueries({ queryKey });
+                            queryClient.removeQueries({
+                                queryKey: queryKeys.queue,
+                            });
+                            queryClient.removeQueries({
+                                queryKey: queryKeys.messages,
+                            });
                             setRefresh(!refresh);
                         }}
                     />
