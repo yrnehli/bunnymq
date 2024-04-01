@@ -12,5 +12,5 @@ export const CONFIG: Config = {
     environments: {
         local: 'http://localhost:15672',
     },
-    useProxy: true,
+    useProxy: false,
 };
