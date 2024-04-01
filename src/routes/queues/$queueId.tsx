@@ -5,6 +5,17 @@ import { SyntaxHighlighter } from "@/components/SyntaxHighlighter";
 import { useTheme } from "@/components/ThemeProvider";
 import { TooltipBasic } from "@/components/TooltipBasic";
 import { QueueSkeleton } from "@/components/skeletons/QueueSkeleton";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -92,14 +103,7 @@ function Queue() {
                     <QueueInfo queue={queue} />
                 </div>
                 <div className="col-span-12 mt-1 flex md:col-span-2 md:mt-0 md:justify-end">
-                    <TooltipBasic
-                        message="Purge Messages"
-                        className="text-red-500"
-                    >
-                        <Button variant="ghost" size="icon">
-                            <OctagonX className="h-[1.2rem] w-[1.2rem] text-red-500" />
-                        </Button>
-                    </TooltipBasic>
+                    <PurgeMessages queue={queue} />
                     <ViewMessages queue={queue} messages={messages} />
                     <RefreshButton
                         onClick={() => {
@@ -238,5 +242,46 @@ function ViewMessages({ queue, messages }: ViewMessagesProps) {
                 ))}
             </SheetContent>
         </Sheet>
+    );
+}
+
+type PurgeMessagesProps = {
+    queue: api.Queue;
+};
+
+function PurgeMessages({ queue }: PurgeMessagesProps) {
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="icon">
+                    <TooltipBasic
+                        message="Purge Messages"
+                        className="text-red-500"
+                    >
+                        <span className="flex h-full w-full items-center justify-center">
+                            <OctagonX className="h-[1.2rem] w-[1.2rem] text-red-500" />
+                        </span>
+                    </TooltipBasic>
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>
+                        Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        purge the messages from{" "}
+                        <span className="italic">{queue.name}</span>.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction variant="destructive">
+                        Continue
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     );
 }
