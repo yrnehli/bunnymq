@@ -23,11 +23,19 @@ const rabbitMqQueuesSchema = z.array(rabbitMqQueueSchema);
 
 type RabbitMqQueue = z.infer<typeof rabbitMqQueueSchema>;
 
+const rabbitMqMessagesSchema = z.array(
+    z.object({
+        payload: z.string(),
+    }),
+);
+
+type RabbitMqMessages = z.infer<typeof rabbitMqMessagesSchema>;
+
 export function login(credentials: string): Promise<unknown> {
     return request('GET', 'whoami', { credentials });
 }
 
-export async function queues(): Promise<Queue[]> {
+export async function queues() {
     const res = await request('GET', 'queues');
     const rabbitMqQueues = rabbitMqQueuesSchema.parse(res);
     const queues = rabbitMqQueues.map(transformQueue);
@@ -35,12 +43,29 @@ export async function queues(): Promise<Queue[]> {
     return queues;
 }
 
-export async function queue(queueId: string): Promise<Queue> {
+export async function queue(queueId: string) {
     const res = await request('GET', `queues/%2F/${queueId}`);
     const rabbitMqQueue = rabbitMqQueueSchema.parse(res);
     const queue = transformQueue(rabbitMqQueue);
 
     return queue;
+}
+
+export async function messages(queueId: string) {
+    const res = await request('POST', `queues/%2F/${queueId}/get`, {
+        data: {
+            vhost: '/',
+            name: queueId,
+            truncate: '50000',
+            ackmode: 'ack_requeue_true',
+            encoding: 'auto',
+            count: '10',
+        },
+    });
+    const rabbitMqMessages = rabbitMqMessagesSchema.parse(res);
+    const messages = transformMessages(rabbitMqMessages);
+
+    return messages;
 }
 
 export async function publish(routingKey: string, payload: string) {
@@ -70,6 +95,10 @@ function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue {
         unacked: rabbitMqQueue.messages_unacknowledged,
         total: rabbitMqQueue.messages,
     };
+}
+
+function transformMessages(rabbitMqMessages: RabbitMqMessages) {
+    return rabbitMqMessages.map((message) => message.payload);
 }
 
 function getBaseUrl() {
