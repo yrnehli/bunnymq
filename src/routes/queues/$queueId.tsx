@@ -49,7 +49,7 @@ function Queue() {
     const [code, setCode] = useState(DEFAULT_CODE);
     const output = computeCode(code);
 
-    const { isLoading, data } = useQuery({
+    const { data } = useQuery({
         queryKey: ["queue", queueId],
         queryFn: () => api.queue(queueId),
     });
@@ -60,7 +60,7 @@ function Queue() {
         onError: () => toast("Failed to publish message ⛔"),
     });
 
-    if (isLoading || !data) {
+    if (!data) {
         return <QueueSkeleton />;
     }
 

@@ -110,7 +110,7 @@ export function QueuesTable({
     const navigate = useNavigate();
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-    const { isLoading, data } = useQuery({
+    const { data } = useQuery({
         queryKey,
         queryFn: () => queues(),
     });
@@ -131,7 +131,7 @@ export function QueuesTable({
         },
     });
 
-    if (isLoading) {
+    if (!data) {
         return <QueueTablesSkeleton />;
     }
 
