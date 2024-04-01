@@ -1,6 +1,7 @@
 import { Ping } from "@/components/Ping";
 import { RefreshButton } from "@/components/RefreshButton";
 import { Spinner } from "@/components/Spinner";
+import { SyntaxHighlighter } from "@/components/SyntaxHighlighter";
 import { useTheme } from "@/components/ThemeProvider";
 import { TooltipBasic } from "@/components/TooltipBasic";
 import { QueueSkeleton } from "@/components/skeletons/QueueSkeleton";
@@ -22,13 +23,7 @@ import { createFileRoute, useParams } from "@tanstack/react-router";
 import dedent from "dedent";
 import { OctagonX, Search } from "lucide-react";
 import { useState } from "react";
-import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-import json from "react-syntax-highlighter/dist/esm/languages/hljs/json";
-import { vs, vs2015 } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { toast } from "sonner";
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-SyntaxHighlighter.registerLanguage("json", json);
 
 export const Route = createFileRoute("/queues/$queueId")({
     component: Queue,
@@ -144,12 +139,7 @@ function Queue() {
                     Message Preview 💬
                 </div>
                 {output ? (
-                    <SyntaxHighlighter
-                        language="json"
-                        style={appearance === "dark" ? vs2015 : vs}
-                    >
-                        {output}
-                    </SyntaxHighlighter>
+                    <SyntaxHighlighter>{output}</SyntaxHighlighter>
                 ) : (
                     <div className="text-red-600">
                         Invalid message construction, expected a string to be
