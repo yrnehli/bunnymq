@@ -32,9 +32,10 @@ import Editor from "@monaco-editor/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import dedent from "dedent";
-import { OctagonX, Search } from "lucide-react";
+import { Copy, OctagonX, Search } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useCopyToClipboard } from "usehooks-ts";
 
 export const Route = createFileRoute("/queues/$queueId")({
     component: Queue,
@@ -203,6 +204,7 @@ type ViewMessagesProps = {
 };
 
 function ViewMessages({ queue, messages }: ViewMessagesProps) {
+    const [, copy] = useCopyToClipboard();
     const messagesCount = Math.min(10, messages.length);
     const singleMessage = messagesCount === 1;
 
@@ -234,9 +236,19 @@ function ViewMessages({ queue, messages }: ViewMessagesProps) {
                 </SheetHeader>
                 {messages.map((message, i) => (
                     <div key={i} className={cn("py-3", i > 0 && "border-t")}>
-                        <small className="uppercase opacity-60">
-                            Message {i + 1}
-                        </small>
+                        <div className="mb-1 flex items-center">
+                            <small className="mr-2 uppercase opacity-60">
+                                Message {i + 1}
+                            </small>
+                            <button
+                                onClick={() => {
+                                    void copy(message);
+                                    toast("Copied to clipboard 📋");
+                                }}
+                            >
+                                <Copy className="h-[12px] w-[12px]" />
+                            </button>
+                        </div>
                         <SyntaxHighlighter>{message}</SyntaxHighlighter>
                     </div>
                 ))}
