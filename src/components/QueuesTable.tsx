@@ -151,7 +151,7 @@ export function QueuesTable({
                     }
                     className="col-span-2 max-w-full sm:col-span-1 sm:max-w-sm"
                 />
-                <div className="col-span-2 grid justify-items-end sm:col-span-1">
+                <div className="col-span-2 flex justify-end sm:col-span-1">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button

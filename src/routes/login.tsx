@@ -90,7 +90,7 @@ function Login() {
     };
 
     return (
-        <div className="mt-5 grid justify-center sm:mt-10">
+        <div className="mt-5 flex flex-col justify-center sm:mt-10">
             <div className="mb-12">
                 <h1 className="text-center text-[72px] font-bold">
                     BunnyMQ 🐇
@@ -102,7 +102,7 @@ function Login() {
             <Form {...loginForm}>
                 <form
                     onSubmit={loginForm.handleSubmit(onLoginFormSubmit)}
-                    className="grid justify-center"
+                    className="flex flex-col items-center"
                 >
                     <div className="mb-4">
                         <FormField
@@ -139,7 +139,7 @@ function Login() {
                             )}
                         />
                     </div>
-                    <div className="mb-4 grid gap-y-2">
+                    <div className="mb-4 flex flex-col gap-y-2">
                         <FormField
                             control={loginForm.control}
                             name="username"

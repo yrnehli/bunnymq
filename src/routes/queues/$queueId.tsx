@@ -96,7 +96,7 @@ function Queue() {
     }
 
     return (
-        <div className="grid gap-y-8">
+        <div className="flex flex-col gap-y-8">
             <div className="grid grid-cols-12 items-center justify-between">
                 <div className="col-span-12 md:col-span-10">
                     <h1 className="mb-2 max-w-xs truncate text-lg font-bold sm:text-2xl md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-xl">
