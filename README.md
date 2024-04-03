@@ -4,13 +4,12 @@ A modern web interface to manage your RabbitMQ queues.
 
 ![image](https://github.com/yrnehli/bunnymq/assets/44710606/fec7bbd6-2ae3-4d30-b515-3eb805827416)
 
-
 ## Features
 
 -   Multiple environments
 -   View queues
 -   Purge/view messages
--   Construct messages to publish to the queue using JS
+-   Construct messages to publish to the queue using TypeScript
 -   Dark mode
 
 ## Installation

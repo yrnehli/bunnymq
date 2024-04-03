@@ -35,6 +35,7 @@ import dedent from "dedent";
 import { Copy, OctagonX, Search } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import ts from "typescript";
 import { useCopyToClipboard } from "usehooks-ts";
 
 export const Route = createFileRoute("/queues/$queueId")({
@@ -43,19 +44,19 @@ export const Route = createFileRoute("/queues/$queueId")({
 });
 
 const DEFAULT_CODE = dedent`
-    const pprint = (obj) => JSON.stringify(obj, null, 4);
+    const pprint = (obj: object) => JSON.stringify(obj, null, 4);
 
     const message = "foo";
     const payload = "bar";
 
-    // Return a string to publish to the queue
+    // @ts-ignore: Return a string to publish to the queue
     return pprint([message, payload]);
 `;
 
 const computeCode = (code: string) => {
     try {
         // eslint-disable-next-line @typescript-eslint/no-implied-eval
-        const res: unknown = new Function(code)();
+        const res: unknown = new Function(ts.transpile(code))();
         return typeof res === "string" ? res.trim() : null;
     } catch (e) {
         return null;
@@ -127,7 +128,7 @@ function Queue() {
                     height="400px"
                     className="max-w-full border"
                     theme={appearance === "dark" ? "vs-dark" : "light"}
-                    defaultLanguage="javascript"
+                    defaultLanguage="typescript"
                     defaultValue={code}
                     onChange={(value) => value && setCode(value)}
                     options={{
