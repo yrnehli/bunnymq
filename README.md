@@ -2,7 +2,8 @@
 
 A modern web interface to manage your RabbitMQ queues.
 
-![image](https://github.com/yrnehli/bunnymq/assets/44710606/fec7bbd6-2ae3-4d30-b515-3eb805827416)
+<img width="945" alt="image" src="https://github.com/yrnehli/bunnymq/assets/44710606/68bc16c6-d2eb-4d07-9a6a-d223d8657752">
+
 
 ## Features
 
