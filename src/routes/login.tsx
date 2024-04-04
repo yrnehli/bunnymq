@@ -148,7 +148,9 @@ function Login() {
                                 <FormItem className="w-72">
                                     <FormControl>
                                         <Input
+                                            id="username"
                                             placeholder="Username"
+                                            autoComplete="username"
                                             {...field}
                                         />
                                     </FormControl>
@@ -163,8 +165,10 @@ function Login() {
                                 <FormItem className="w-72">
                                     <FormControl>
                                         <Input
+                                            id="current-password"
                                             type="password"
                                             placeholder="Password"
+                                            autoComplete="current-password"
                                             {...field}
                                         />
                                     </FormControl>
