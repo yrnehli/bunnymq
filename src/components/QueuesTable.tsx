@@ -186,7 +186,7 @@ export function QueuesTable({
                     </DropdownMenu>
                 </div>
             </div>
-            <div className="rounded-md border">
+            <div className="overflow-scroll rounded-md border">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -205,10 +205,7 @@ export function QueuesTable({
                     <TableBody>
                         {table.getRowModel().rows.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    className="cursor-pointer"
-                                    key={row.id}
-                                >
+                                <TableRow key={row.id}>
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell
                                             key={cell.id}
