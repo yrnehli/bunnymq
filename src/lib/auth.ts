@@ -1,19 +1,25 @@
 import { login } from '@/lib/api';
+import { getCookie, setCookie } from 'react-use-cookie';
 
 export async function isAuthenticated() {
-    const credentials = sessionStorage.getItem('credentials');
+    const credentials = getCookie('credentials');
 
-    if (credentials === null) {
-        sessionStorage.clear();
+    if (credentials.length === 0) {
+        unauthenticate();
         return false;
     }
 
     try {
         await login(credentials);
     } catch (e) {
-        sessionStorage.clear();
+        unauthenticate();
         return false;
     }
 
     return true;
+}
+
+export function unauthenticate() {
+    setCookie('credentials', '');
+    setCookie('environment', '');
 }

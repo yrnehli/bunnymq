@@ -5,6 +5,7 @@ import { Updater, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SortingState, VisibilityState } from "@tanstack/react-table";
 import { useState } from "react";
+import { getCookie } from "react-use-cookie";
 import { z } from "zod";
 
 type QueuesSearch = {
@@ -36,7 +37,8 @@ function Queues() {
     const search = Route.useSearch();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const queryKey = ["queues", sessionStorage.getItem("environment")];
+    const environment = getCookie("environment");
+    const queryKey = ["queues", environment];
     const [refresh, setRefresh] = useState(false); // TODO: remove?
 
     const onColumnVisibilityChange = (

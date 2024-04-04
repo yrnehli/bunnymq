@@ -1,6 +1,7 @@
 import { CONFIG, EnvironmentName } from '@/config';
 import { assert, pprint } from '@/lib/utils';
 import axios, { Method } from 'axios';
+import { getCookie } from 'react-use-cookie';
 import { z } from 'zod';
 
 export type Queue = {
@@ -121,11 +122,9 @@ function transformMessages(rabbitMqMessages: RabbitMqMessages) {
 }
 
 function getBaseUrl() {
-    const environment = sessionStorage.getItem(
-        'environment',
-    ) as EnvironmentName | null;
+    const environment = getCookie('environment') as EnvironmentName;
 
-    assert(environment !== null, 'Could not find a selected environment!');
+    assert(environment.length > 0, 'Could not find a selected environment!');
 
     return CONFIG.environments[environment];
 }
@@ -147,7 +146,7 @@ async function request<T = unknown>(
         url: url,
         params: { ...(CONFIG.useProxy && { proxy: apiUrl }) },
         headers: {
-            'Authorization': `Basic ${credentials ?? sessionStorage.getItem('credentials')}`,
+            'Authorization': `Basic ${credentials ?? getCookie('credentials')}`,
         },
         data: data,
     });

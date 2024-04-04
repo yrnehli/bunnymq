@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { setCookie } from "react-use-cookie";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -71,9 +72,14 @@ function Login() {
     const login = useMutation({
         mutationFn: (values: z.infer<typeof loginFormSchema>) => {
             const credentials = btoa(`${values.username}:${values.password}`);
+            const cookieOptions = {
+                days: 1 / 24, // 1 hour
+                Secure: true,
+                SameSite: "Strict",
+            } as const;
 
-            sessionStorage.setItem("environment", values.environment);
-            sessionStorage.setItem("credentials", credentials);
+            setCookie("credentials", credentials, cookieOptions);
+            setCookie("environment", values.environment, cookieOptions);
 
             return api.login(credentials);
         },
