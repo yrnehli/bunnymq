@@ -1,22 +1,25 @@
 import dedent from 'dedent';
+import { expr } from './utils';
 
-export const setCookie = (name: string, value: string) => {
+export function setCookie(name: string, value: string) {
     document.cookie = dedent`
 		${name}=${encodeURIComponent(value)}; expires=0; path=/; Secure; SameSite=Strict
 	`;
-};
+}
 
-export const getCookie = (name: string) => {
-    const value = document.cookie.split('; ').reduce((acc, cookie) => {
-        const [cookieName, cookieValue] = cookie.split('=');
+export function getCookie(name: string) {
+    return expr(() => {
+        for (const cookie of document.cookie.split('; ')) {
+            const [cookieName, cookieValue] = cookie.split('=');
 
-        return cookieName !== name || cookieValue === undefined
-            ? acc
-            : decodeURIComponent(cookieValue);
-    }, '');
+            if (cookieName === name && cookieValue !== undefined) {
+                return decodeURIComponent(cookieValue);
+            }
+        }
 
-    return value.length > 0 ? value : null;
-};
+        return null;
+    });
+}
 
 export function deleteCookie(name: string) {
     document.cookie = `${name}=; Max-Age=0`;
