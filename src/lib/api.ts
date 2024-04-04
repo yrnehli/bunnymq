@@ -103,7 +103,7 @@ export async function purge(queueId: string) {
 }
 
 function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue | null {
-    if (!rabbitMqQueue.consumers) {
+    if (rabbitMqQueue.consumers === undefined) {
         return null;
     }
 
