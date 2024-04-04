@@ -1,10 +1,10 @@
 import { login } from '@/lib/api';
-import { getCookie, setCookie } from 'react-use-cookie';
+import { deleteCookie, getCookie } from './cookies';
 
 export async function isAuthenticated() {
     const credentials = getCookie('credentials');
 
-    if (credentials.length === 0) {
+    if (credentials === null) {
         unauthenticate();
         return false;
     }
@@ -20,6 +20,6 @@ export async function isAuthenticated() {
 }
 
 export function unauthenticate() {
-    setCookie('credentials', '');
-    setCookie('environment', '');
+    deleteCookie('credentials');
+    deleteCookie('environment');
 }

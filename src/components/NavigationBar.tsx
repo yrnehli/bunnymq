@@ -10,16 +10,16 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import { getCookie } from "@/lib/cookies";
 import { cn } from "@/lib/utils";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 import { useOverflowDetector } from "react-detectable-overflow";
-import { getCookie } from "react-use-cookie";
 
 export function NavigationBar() {
     const credentials = getCookie("credentials");
     const environment = getCookie("environment");
-    const loggedIn = credentials.length > 0;
+    const loggedIn = credentials !== null;
 
     return (
         <nav className="flex items-center justify-between border-b p-2">

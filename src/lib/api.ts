@@ -1,8 +1,8 @@
 import { CONFIG, EnvironmentName } from '@/config';
 import { assert, pprint } from '@/lib/utils';
 import axios, { Method } from 'axios';
-import { getCookie } from 'react-use-cookie';
 import { z } from 'zod';
+import { getCookie } from './cookies';
 
 export type Queue = {
     name: string;
@@ -122,11 +122,11 @@ function transformMessages(rabbitMqMessages: RabbitMqMessages) {
 }
 
 function getBaseUrl() {
-    const environment = getCookie('environment') as EnvironmentName;
+    const environment = getCookie('environment');
 
-    assert(environment.length > 0, 'Could not find a selected environment!');
+    assert(environment !== null, 'Could not find a selected environment!');
 
-    return CONFIG.environments[environment];
+    return CONFIG.environments[environment as EnvironmentName];
 }
 
 async function request<T = unknown>(

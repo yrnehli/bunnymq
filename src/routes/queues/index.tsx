@@ -1,11 +1,11 @@
 import { QueuesTable } from "@/components/QueuesTable";
 import { RefreshButton } from "@/components/RefreshButton";
+import { getCookie } from "@/lib/cookies";
 import { checkAuthenticated } from "@/routes/__root";
 import { Updater, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SortingState, VisibilityState } from "@tanstack/react-table";
 import { useState } from "react";
-import { getCookie } from "react-use-cookie";
 import { z } from "zod";
 
 type QueuesSearch = {
