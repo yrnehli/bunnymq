@@ -13,10 +13,13 @@ export type Queue = {
 
 const rabbitMqQueueSchema = z.object({
     name: z.string(),
-    consumers: z.number(),
-    messages: z.number(),
-    messages_ready: z.number(),
-    messages_unacknowledged: z.number(),
+    consumers: z.number().optional(),
+    messages: z.number().optional(),
+    messages_ready: z.number().optional(),
+    messages_unacknowledged: z.number().optional(),
+    messages_ram: z.number().optional(),
+    messages_ready_ram: z.number().optional(),
+    messages_unacknowledged_ram: z.number().optional(),
 });
 
 const rabbitMqQueuesSchema = z.array(rabbitMqQueueSchema);
@@ -38,7 +41,9 @@ export function login(credentials: string): Promise<unknown> {
 export async function queues() {
     const res = await request('GET', 'queues');
     const rabbitMqQueues = rabbitMqQueuesSchema.parse(res);
-    const queues = rabbitMqQueues.map(transformQueue);
+    const queues = rabbitMqQueues
+        .map(transformQueue)
+        .filter((q): q is Queue => Boolean(q));
 
     return queues;
 }
@@ -97,13 +102,23 @@ export async function purge(queueId: string) {
     });
 }
 
-function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue {
+function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue | null {
+    if (!rabbitMqQueue.consumers) {
+        return null;
+    }
+
     return {
         name: rabbitMqQueue.name,
         consumers: rabbitMqQueue.consumers,
-        ready: rabbitMqQueue.messages_ready,
-        unacked: rabbitMqQueue.messages_unacknowledged,
-        total: rabbitMqQueue.messages,
+        ready:
+            rabbitMqQueue.messages_ready ??
+            rabbitMqQueue.messages_ready_ram ??
+            0,
+        unacked:
+            rabbitMqQueue.messages_unacknowledged ??
+            rabbitMqQueue.messages_unacknowledged_ram ??
+            0,
+        total: rabbitMqQueue.messages ?? rabbitMqQueue.messages_ram ?? 0,
     };
 }
 

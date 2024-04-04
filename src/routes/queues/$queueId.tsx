@@ -77,11 +77,13 @@ function Queue() {
     const { data: queue } = useQuery({
         queryKey: queryKeys.queue,
         queryFn: () => api.queue(queueId),
+        throwOnError: true,
     });
 
     const { data: messages } = useQuery({
         queryKey: queryKeys.messages,
         queryFn: () => api.messages(queueId),
+        throwOnError: true,
     });
 
     const publishMessage = useMutation({
