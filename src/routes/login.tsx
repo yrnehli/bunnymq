@@ -55,12 +55,13 @@ const loginFormSchema = z.object({
         message: "Password must be at least 1 character.",
     }),
 });
+type LoginForm = z.infer<typeof loginFormSchema>;
 
 function Login() {
     const { next } = Route.useSearch();
     const navigate = useNavigate();
 
-    const loginForm = useForm<z.infer<typeof loginFormSchema>>({
+    const loginForm = useForm<LoginForm>({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
             environment: ENVIRONMENT_NAMES[0],
@@ -70,7 +71,7 @@ function Login() {
     });
 
     const login = useMutation({
-        mutationFn: (values: z.infer<typeof loginFormSchema>) => {
+        mutationFn: (values: LoginForm) => {
             const credentials = btoa(`${values.username}:${values.password}`);
 
             setCookie("credentials", credentials);
@@ -86,10 +87,6 @@ function Login() {
         },
     });
 
-    const onLoginFormSubmit = (values: z.infer<typeof loginFormSchema>) => {
-        login.mutate(values);
-    };
-
     return (
         <div className="mt-5 flex flex-col justify-center sm:mt-10">
             <div className="mb-12">
@@ -102,7 +99,9 @@ function Login() {
             </div>
             <Form {...loginForm}>
                 <form
-                    onSubmit={loginForm.handleSubmit(onLoginFormSubmit)}
+                    onSubmit={loginForm.handleSubmit((values) =>
+                        login.mutate(values),
+                    )}
                     className="flex flex-col items-center"
                 >
                     <div className="mb-4">
