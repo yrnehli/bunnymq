@@ -1,5 +1,6 @@
 import { QueuesTable } from "@/components/QueuesTable";
 import { RefreshButton } from "@/components/RefreshButton";
+import { getCookie } from "@/lib/cookies";
 import { checkAuthenticated } from "@/routes/__root";
 import { Updater, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -36,7 +37,8 @@ function Queues() {
     const search = Route.useSearch();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const queryKey = ["queues", sessionStorage.getItem("environment")];
+    const environment = getCookie("environment");
+    const queryKey = ["queues", environment];
     const [refresh, setRefresh] = useState(false); // TODO: remove?
 
     const onColumnVisibilityChange = (

@@ -1,19 +1,25 @@
 import { login } from '@/lib/api';
+import { deleteCookie, getCookie } from './cookies';
 
 export async function isAuthenticated() {
-    const credentials = sessionStorage.getItem('credentials');
+    const credentials = getCookie('credentials');
 
     if (credentials === null) {
-        sessionStorage.clear();
+        unauthenticate();
         return false;
     }
 
     try {
         await login(credentials);
     } catch (e) {
-        sessionStorage.clear();
+        unauthenticate();
         return false;
     }
 
     return true;
+}
+
+export function unauthenticate() {
+    deleteCookie('credentials');
+    deleteCookie('environment');
 }

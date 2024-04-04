@@ -19,6 +19,7 @@ import {
 import { ENVIRONMENT_NAMES } from "@/config";
 import * as api from "@/lib/api";
 import { isAuthenticated } from "@/lib/auth";
+import { setCookie } from "@/lib/cookies";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
@@ -72,8 +73,8 @@ function Login() {
         mutationFn: (values: z.infer<typeof loginFormSchema>) => {
             const credentials = btoa(`${values.username}:${values.password}`);
 
-            sessionStorage.setItem("environment", values.environment);
-            sessionStorage.setItem("credentials", credentials);
+            setCookie("credentials", credentials);
+            setCookie("environment", values.environment);
 
             return api.login(credentials);
         },
@@ -147,7 +148,9 @@ function Login() {
                                 <FormItem className="w-72">
                                     <FormControl>
                                         <Input
+                                            id="username"
                                             placeholder="Username"
+                                            autoComplete="username"
                                             {...field}
                                         />
                                     </FormControl>
@@ -162,8 +165,10 @@ function Login() {
                                 <FormItem className="w-72">
                                     <FormControl>
                                         <Input
+                                            id="current-password"
                                             type="password"
                                             placeholder="Password"
+                                            autoComplete="current-password"
                                             {...field}
                                         />
                                     </FormControl>
