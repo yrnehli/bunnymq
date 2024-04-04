@@ -4,13 +4,14 @@ import axios, { Method } from 'axios';
 import { z } from 'zod';
 import { getCookie } from './cookies';
 
-export type Queue = {
-    name: string;
-    consumers: number;
-    ready: number;
-    unacked: number;
-    total: number;
-};
+const queueSchema = z.object({
+    name: z.string(),
+    consumers: z.number(),
+    ready: z.number(),
+    unacked: z.number(),
+    total: z.number(),
+});
+export type Queue = z.infer<typeof queueSchema>;
 
 const rabbitMqQueueSchema = z.object({
     name: z.string(),
@@ -18,13 +19,9 @@ const rabbitMqQueueSchema = z.object({
     messages: z.number().optional(),
     messages_ready: z.number().optional(),
     messages_unacknowledged: z.number().optional(),
-    messages_ram: z.number().optional(),
-    messages_ready_ram: z.number().optional(),
-    messages_unacknowledged_ram: z.number().optional(),
 });
 
 const rabbitMqQueuesSchema = z.array(rabbitMqQueueSchema);
-
 type RabbitMqQueue = z.infer<typeof rabbitMqQueueSchema>;
 
 const rabbitMqMessagesSchema = z.array(
@@ -32,7 +29,6 @@ const rabbitMqMessagesSchema = z.array(
         payload: z.string(),
     }),
 );
-
 type RabbitMqMessages = z.infer<typeof rabbitMqMessagesSchema>;
 
 export function login(credentials: string): Promise<unknown> {
@@ -42,7 +38,9 @@ export function login(credentials: string): Promise<unknown> {
 export async function queues() {
     const res = await request('GET', 'queues');
     const rabbitMqQueues = rabbitMqQueuesSchema.parse(res);
-    const queues = rabbitMqQueues.map(transformQueue);
+    const queues = rabbitMqQueues
+        .map(transformQueue)
+        .filter((q): q is Queue => Boolean(q));
 
     return queues;
 }
@@ -101,20 +99,16 @@ export async function purge(queueId: string) {
     });
 }
 
-function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue {
-    return {
+function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue | null {
+    const validation = queueSchema.safeParse({
         name: rabbitMqQueue.name,
-        consumers: rabbitMqQueue.consumers ?? 0,
-        ready:
-            rabbitMqQueue.messages_ready ??
-            rabbitMqQueue.messages_ready_ram ??
-            0,
-        unacked:
-            rabbitMqQueue.messages_unacknowledged ??
-            rabbitMqQueue.messages_unacknowledged_ram ??
-            0,
-        total: rabbitMqQueue.messages ?? rabbitMqQueue.messages_ram ?? 0,
-    };
+        consumers: rabbitMqQueue.consumers,
+        ready: rabbitMqQueue.messages_ready,
+        unacked: rabbitMqQueue.messages_unacknowledged,
+        total: rabbitMqQueue.messages,
+    });
+
+    return validation.success ? validation.data : null;
 }
 
 function transformMessages(rabbitMqMessages: RabbitMqMessages) {
