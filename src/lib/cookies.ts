@@ -1,8 +1,9 @@
+import { CONFIG } from '@/config';
 import dedent from 'dedent';
 
 export function setCookie(name: string, value: string) {
     document.cookie = dedent`
-		${name}=${encodeURIComponent(value)}; expires=0; path=/; Secure; SameSite=Strict
+		${name}=${encodeURIComponent(value)}; path=/; Max-Age=${CONFIG.credentialsTtl}; Secure; SameSite=Strict
 	`;
 }
 

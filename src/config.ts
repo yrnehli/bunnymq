@@ -5,6 +5,7 @@ export type BaseUrl = `https://${string}` | `http://${string}`;
 
 export type Config = {
     environments: Record<EnvironmentName, BaseUrl>;
+    credentialsTtl: number;
     useProxy: boolean;
 };
 
@@ -12,5 +13,6 @@ export const CONFIG: Config = {
     environments: {
         local: 'http://localhost:15672',
     },
+    credentialsTtl: 86400,
     useProxy: false,
 };

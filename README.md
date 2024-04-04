@@ -4,14 +4,13 @@ A modern web interface to manage your RabbitMQ queues.
 
 <img width="945" alt="image" src="https://github.com/yrnehli/bunnymq/assets/44710606/68bc16c6-d2eb-4d07-9a6a-d223d8657752">
 
-
 ## Features
 
--   Multiple environments
--   View queues
--   Purge/view messages
--   Construct messages to publish to the queue using TypeScript
--   Dark mode
+-   Multiple environments 🌲
+-   View queues 🔁
+-   Purge/view messages 👀
+-   Construct queue messages using TypeScript 💬
+-   Dark mode 🌚
 
 ## Installation
 
@@ -23,7 +22,8 @@ A modern web interface to manage your RabbitMQ queues.
 
 ## Configuration
 
-| Key            | Type                               | Description                                                                                                                                         |
-| -------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `environments` | `Record<EnvironmentName, BaseUrl>` | A mapping of environment names to the base URL of your RabbitMQ web instance.                                                                       |
-| `useProxy`     | `boolean`                          | Use a proxy to make calls to the RabbitMQ web API, circumventing CORS restrictions. **Not recommended if hosting on a publicly accessible server!** |
+| Key              | Type                               | Description                                                                                                                                         |
+| ---------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `environments`   | `Record<EnvironmentName, BaseUrl>` | A mapping of environment names to the base URL of your RabbitMQ web instance.                                                                       |
+| `credentialsTtl` | `number`                           | The TTL (time to live) in seconds for the login credentials to persist within the browser.                                                          |
+| `useProxy`       | `boolean`                          | Use a proxy to make calls to the RabbitMQ web API, circumventing CORS restrictions. **Not recommended if hosting on a publicly accessible server!** |
