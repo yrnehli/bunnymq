@@ -1,5 +1,8 @@
+import { z } from 'zod';
+
 export const ENVIRONMENT_NAMES = ['local'] as const;
-export type EnvironmentName = (typeof ENVIRONMENT_NAMES)[number];
+export const environmentNameSchema = z.enum(ENVIRONMENT_NAMES);
+export type EnvironmentName = z.infer<typeof environmentNameSchema>;
 
 export type BaseUrl = `https://${string}` | `http://${string}`;
 

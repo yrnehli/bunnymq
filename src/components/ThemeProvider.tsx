@@ -1,7 +1,10 @@
 import { assert, expr } from "@/lib/utils";
 import { createContext, useContext, useEffect, useState } from "react";
+import { z } from "zod";
 
-type Theme = "dark" | "light" | "system";
+const THEMES = ["dark", "light", "system"] as const;
+const themeSchema = z.enum(THEMES).catch("system");
+type Theme = z.infer<typeof themeSchema>;
 
 type ThemeProviderProps = {
     children: React.ReactNode;
@@ -29,8 +32,8 @@ export function ThemeProvider({
     storageKey = "vite-ui-theme",
     ...props
 }: ThemeProviderProps) {
-    const [theme, setTheme] = useState<Theme>(
-        () => (localStorage.getItem(storageKey) || defaultTheme) as Theme,
+    const [theme, setTheme] = useState<Theme>(() =>
+        themeSchema.parse(localStorage.getItem(storageKey)),
     );
 
     const appearance = expr(() => {

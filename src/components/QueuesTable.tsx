@@ -33,6 +33,7 @@ import { Queue, queues } from "@/lib/api";
 import { Updater, useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { z } from "zod";
 
 function SortableHeader(props: {
     column: Column<Queue>;
@@ -140,10 +141,13 @@ export function QueuesTable({
             <div className="grid grid-cols-2 gap-y-2 py-4">
                 <Input
                     placeholder="Filter queues..."
-                    value={
-                        (columnFilters.find((filter) => filter.id === "name")
-                            ?.value ?? "") as string
-                    }
+                    value={z
+                        .string()
+                        .catch("")
+                        .parse(
+                            columnFilters.find((filter) => filter.id === "name")
+                                ?.value,
+                        )}
                     onChange={(event) =>
                         table
                             .getColumn("name")

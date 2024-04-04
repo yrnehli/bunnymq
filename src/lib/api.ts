@@ -1,5 +1,5 @@
-import { CONFIG, EnvironmentName } from '@/config';
-import { assert, pprint } from '@/lib/utils';
+import { CONFIG, environmentNameSchema } from '@/config';
+import { pprint } from '@/lib/utils';
 import axios, { Method } from 'axios';
 import { z } from 'zod';
 import { getCookie } from './cookies';
@@ -116,11 +116,8 @@ function transformMessages(rabbitMqMessages: RabbitMqMessages) {
 }
 
 function getBaseUrl() {
-    const environment = getCookie('environment');
-
-    assert(environment !== null, 'Could not find a selected environment!');
-
-    return CONFIG.environments[environment as EnvironmentName];
+    const environment = environmentNameSchema.parse(getCookie('environment'));
+    return CONFIG.environments[environment];
 }
 
 async function request<T = unknown>(
