@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/table";
 import { Queue, queues } from "@/lib/api";
 import { Updater, useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 
 function SortableHeader(props: {
@@ -107,7 +107,6 @@ export function QueuesTable({
     sorting,
     onSortingChange,
 }: QueuesTableProps) {
-    const navigate = useNavigate();
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
     const { data } = useQuery({
@@ -204,26 +203,32 @@ export function QueuesTable({
                         {table.getRowModel().rows.length ? (
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
-                                    key={row.id}
                                     className="cursor-pointer"
-                                    onClick={() =>
-                                        navigate({
-                                            to: "/queues/$queueId",
-                                            params: {
-                                                queueId:
-                                                    row.getValue<string>(
-                                                        "name",
-                                                    ),
-                                            },
-                                        })
-                                    }
+                                    key={row.id}
                                 >
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext(),
-                                            )}
+                                        <TableCell
+                                            key={cell.id}
+                                            className="p-0"
+                                        >
+                                            <Link
+                                                className=""
+                                                to="/queues/$queueId"
+                                                params={{
+                                                    queueId:
+                                                        row.getValue<string>(
+                                                            "name",
+                                                        ),
+                                                }}
+                                            >
+                                                <div className="p-4">
+                                                    {flexRender(
+                                                        cell.column.columnDef
+                                                            .cell,
+                                                        cell.getContext(),
+                                                    )}
+                                                </div>
+                                            </Link>
                                         </TableCell>
                                     ))}
                                 </TableRow>
