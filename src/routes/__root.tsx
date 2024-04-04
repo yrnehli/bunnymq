@@ -11,7 +11,9 @@ import {
     redirect,
 } from "@tanstack/react-router";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: { queries: { throwOnError: true } },
+});
 
 export const Route = createRootRoute({
     component: () => (

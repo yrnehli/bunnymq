@@ -113,7 +113,6 @@ export function QueuesTable({
     const { data } = useQuery({
         queryKey,
         queryFn: () => queues(),
-        throwOnError: true,
     });
 
     const table = useReactTable({
