@@ -227,7 +227,7 @@ function ViewMessages({ queue, messages }: ViewMessagesProps) {
                 <SheetHeader className="mb-3">
                     <SheetTitle>Messages</SheetTitle>
                     <SheetDescription>
-                        Displaying the latest{" "}
+                        Displaying the first{" "}
                         <span className="font-bold">
                             {!singleMessage && messagesCount}
                         </span>{" "}
