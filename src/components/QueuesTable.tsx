@@ -212,7 +212,6 @@ export function QueuesTable({
                                             className="p-0"
                                         >
                                             <Link
-                                                className=""
                                                 to="/queues/$queueId"
                                                 params={{
                                                     queueId:
