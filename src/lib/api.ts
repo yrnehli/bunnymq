@@ -41,9 +41,7 @@ export function login(credentials: string): Promise<unknown> {
 export async function queues() {
     const res = await request('GET', 'queues');
     const rabbitMqQueues = rabbitMqQueuesSchema.parse(res);
-    const queues = rabbitMqQueues
-        .map(transformQueue)
-        .filter((q): q is Queue => Boolean(q));
+    const queues = rabbitMqQueues.map(transformQueue);
 
     return queues;
 }
@@ -102,14 +100,10 @@ export async function purge(queueId: string) {
     });
 }
 
-function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue | null {
-    if (rabbitMqQueue.consumers === undefined) {
-        return null;
-    }
-
+function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue {
     return {
         name: rabbitMqQueue.name,
-        consumers: rabbitMqQueue.consumers,
+        consumers: rabbitMqQueue.consumers ?? 0,
         ready:
             rabbitMqQueue.messages_ready ??
             rabbitMqQueue.messages_ready_ram ??
