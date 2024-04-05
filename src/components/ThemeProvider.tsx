@@ -8,8 +8,6 @@ type Theme = z.infer<typeof themeSchema>;
 
 type ThemeProviderProps = {
     children: React.ReactNode;
-    defaultTheme?: Theme;
-    storageKey?: string;
 };
 
 type ThemeProviderState = {
@@ -26,7 +24,7 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+export function ThemeProvider({ children }: ThemeProviderProps) {
     const storageKey = "theme" as const;
     const [theme, setTheme] = useState<Theme>(() =>
         themeSchema.parse(localStorage.getItem(storageKey)),
@@ -58,7 +56,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
     };
 
     return (
-        <ThemeProviderContext.Provider {...props} value={value}>
+        <ThemeProviderContext.Provider value={value}>
             {children}
         </ThemeProviderContext.Provider>
     );
