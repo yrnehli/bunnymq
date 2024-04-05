@@ -186,7 +186,7 @@ export function QueuesTable({
                     </DropdownMenu>
                 </div>
             </div>
-            <div className="overflow-scroll rounded-md border">
+            <div className="rounded-md border">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
