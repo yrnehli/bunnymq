@@ -68,6 +68,7 @@ function Queue() {
     const { queueId } = useParams({ from: "/queues/$queueId" });
     const [code, setCode] = useState(DEFAULT_CODE);
     const [refresh, setRefresh] = useState(false);
+    const environment = api.getEnvironment();
     const queryClient = useQueryClient();
     const output = computeCode(code);
     const queryKeys = {
@@ -154,6 +155,14 @@ function Queue() {
                 )}
             </div>
             <div>
+                {["prod", "production"].includes(environment) && (
+                    <div className="mb-3 text-red-600">
+                        <span className="font-bold">Warning</span>: you are
+                        publishing this message to a{" "}
+                        <span className="font-bold">production</span>{" "}
+                        environment!
+                    </div>
+                )}
                 <Button
                     disabled={output === null || publishMessage.isPending}
                     onClick={() => output && publishMessage.mutate(output)}

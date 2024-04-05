@@ -100,6 +100,10 @@ export async function purge(queueId: string) {
     });
 }
 
+export function getEnvironment() {
+    return environmentNameSchema.parse(getCookie('environment'));
+}
+
 function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue | null {
     if (!rabbitMqQueue.durable) {
         return null;
@@ -121,7 +125,7 @@ function transformMessages(rabbitMqMessages: RabbitMqMessages) {
 }
 
 function getBaseUrl() {
-    const environment = environmentNameSchema.parse(getCookie('environment'));
+    const environment = getEnvironment();
     return CONFIG.environments[environment];
 }
 
