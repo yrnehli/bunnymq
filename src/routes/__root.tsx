@@ -18,7 +18,7 @@ const queryClient = new QueryClient({
 export const Route = createRootRoute({
     component: () => (
         <QueryClientProvider client={queryClient}>
-            <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+            <ThemeProvider>
                 <CatchBoundary
                     getResetKey={() => "reset"}
                     onCatch={(error) => console.error(error)}
