@@ -35,12 +35,12 @@ export const Route = createRootRoute({
     ),
 });
 
-export async function checkAuthenticated(redirectTo: string) {
+export async function checkAuthenticated(loginRedirect: string) {
     const authenticated = await isAuthenticated();
     if (!authenticated) {
         throw redirect({
             to: "/login",
-            search: { next: redirectTo },
+            search: { next: loginRedirect },
         });
     }
 }
