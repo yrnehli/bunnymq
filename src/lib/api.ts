@@ -15,6 +15,7 @@ export type Queue = z.infer<typeof queueSchema>;
 
 const rabbitMqQueueSchema = z.object({
     name: z.string(),
+    durable: z.boolean(),
     consumers: z.number().optional(),
     messages: z.number().optional(),
     messages_ready: z.number().optional(),
@@ -100,6 +101,10 @@ export async function purge(queueId: string) {
 }
 
 function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue | null {
+    if (!rabbitMqQueue.durable) {
+        return null;
+    }
+
     const validation = queueSchema.safeParse({
         name: rabbitMqQueue.name,
         consumers: rabbitMqQueue.consumers,
