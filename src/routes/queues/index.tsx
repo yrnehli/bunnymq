@@ -5,7 +5,6 @@ import { checkAuthenticated } from "@/routes/__root";
 import { Updater, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SortingState, VisibilityState } from "@tanstack/react-table";
-import { useState } from "react";
 import { z } from "zod";
 
 type QueuesSearch = {
@@ -39,7 +38,6 @@ function Queues() {
     const queryClient = useQueryClient();
     const environment = getCookie("environment");
     const queryKey = ["queues", environment];
-    const [refresh, setRefresh] = useState(false); // TODO: remove?
 
     const onColumnVisibilityChange = (
         updateFn: Updater<VisibilityState, VisibilityState>,
@@ -76,10 +74,7 @@ function Queues() {
             <div className="flex justify-between">
                 <h1 className="text-2xl font-bold">Queues 🧑‍💻</h1>
                 <RefreshButton
-                    onClick={() => {
-                        queryClient.removeQueries({ queryKey });
-                        setRefresh(!refresh);
-                    }}
+                    onClick={() => queryClient.invalidateQueries({ queryKey })}
                 />
             </div>
             <QueuesTable

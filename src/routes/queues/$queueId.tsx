@@ -67,7 +67,6 @@ function Queue() {
     const { appearance } = useTheme();
     const { queueId } = useParams({ from: "/queues/$queueId" });
     const [code, setCode] = useState(DEFAULT_CODE);
-    const [refresh, setRefresh] = useState(false);
     const environment = api.getEnvironment();
     const queryClient = useQueryClient();
     const output = computeCode(code);
@@ -110,13 +109,12 @@ function Queue() {
                     <ViewMessages queue={queue} messages={messages} />
                     <RefreshButton
                         onClick={() => {
-                            queryClient.removeQueries({
+                            void queryClient.invalidateQueries({
                                 queryKey: queryKeys.queue,
                             });
-                            queryClient.removeQueries({
+                            void queryClient.invalidateQueries({
                                 queryKey: queryKeys.messages,
                             });
-                            setRefresh(!refresh);
                         }}
                     />
                 </div>
