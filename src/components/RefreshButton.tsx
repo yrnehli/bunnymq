@@ -4,15 +4,20 @@ import { useState } from "react";
 
 export type RefreshButtonProps = {
     onClick?: () => void;
+    disabled?: boolean;
 };
 
-export function RefreshButton({ onClick }: RefreshButtonProps) {
+export function RefreshButton({
+    onClick,
+    disabled = false,
+}: RefreshButtonProps) {
     const [rotation, setRotation] = useState(0);
 
     return (
         <Button
             variant="ghost"
             size="icon"
+            disabled={disabled}
             onClick={() => {
                 onClick && onClick();
                 setRotation(rotation + 360);

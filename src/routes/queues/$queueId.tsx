@@ -75,12 +75,12 @@ function Queue() {
         messages: ["messages", queueId],
     } as const;
 
-    const { data: queue } = useQuery({
+    const { data: queue, isFetching: queueFetching } = useQuery({
         queryKey: queryKeys.queue,
         queryFn: () => api.queue(queueId),
     });
 
-    const { data: messages } = useQuery({
+    const { data: messages, isFetching: messagesFetching } = useQuery({
         queryKey: queryKeys.messages,
         queryFn: () => api.messages(queueId),
     });
@@ -123,10 +123,8 @@ function Queue() {
                     />
                     <ViewMessages queue={queue} messages={messages} />
                     <RefreshButton
-                        onClick={() => {
-                            invalidateQueries();
-                            toast("Refreshing ♻️");
-                        }}
+                        disabled={queueFetching || messagesFetching}
+                        onClick={() => invalidateQueries()}
                     />
                 </div>
             </div>

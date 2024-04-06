@@ -32,7 +32,7 @@ import {
 import { Queue, queues } from "@/lib/api";
 import { Updater, useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
 function SortableHeader(props: {
@@ -99,6 +99,7 @@ export type QueuesTableProps = {
     ) => void;
     sorting: SortingState;
     onSortingChange: (updateFn: Updater<SortingState, SortingState>) => void;
+    onFetchingChange?: (isFetching: boolean) => void;
 };
 
 export function QueuesTable({
@@ -107,13 +108,18 @@ export function QueuesTable({
     onColumnVisibilityChange,
     sorting,
     onSortingChange,
+    onFetchingChange,
 }: QueuesTableProps) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-    const { data } = useQuery({
+    const { data, isFetching } = useQuery({
         queryKey,
         queryFn: () => queues(),
     });
+
+    useEffect(() => {
+        onFetchingChange && onFetchingChange(isFetching);
+    }, [isFetching, onFetchingChange]);
 
     const table = useReactTable({
         data: data ?? [],

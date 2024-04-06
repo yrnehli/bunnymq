@@ -5,7 +5,7 @@ import { checkAuthenticated } from "@/routes/__root";
 import { Updater, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SortingState, VisibilityState } from "@tanstack/react-table";
-import { toast } from "sonner";
+import { useState } from "react";
 import { z } from "zod";
 
 type QueuesSearch = {
@@ -37,6 +37,7 @@ function Queues() {
     const search = Route.useSearch();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const [fetching, setFetching] = useState(false);
     const environment = getCookie("environment");
     const queryKey = ["queues", environment];
 
@@ -75,10 +76,8 @@ function Queues() {
             <div className="flex justify-between">
                 <h1 className="text-2xl font-bold">Queues 🧑‍💻</h1>
                 <RefreshButton
-                    onClick={() => {
-                        void queryClient.invalidateQueries({ queryKey });
-                        toast("Refreshing ♻️");
-                    }}
+                    onClick={() => queryClient.invalidateQueries({ queryKey })}
+                    disabled={fetching}
                 />
             </div>
             <QueuesTable
@@ -87,6 +86,7 @@ function Queues() {
                 onColumnVisibilityChange={onColumnVisibilityChange}
                 sorting={search.sorting ?? []}
                 onSortingChange={onSortingChange}
+                onFetchingChange={(isFetching) => setFetching(isFetching)}
             />
         </>
     );
