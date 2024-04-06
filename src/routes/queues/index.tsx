@@ -5,6 +5,7 @@ import { checkAuthenticated } from "@/routes/__root";
 import { Updater, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SortingState, VisibilityState } from "@tanstack/react-table";
+import { toast } from "sonner";
 import { z } from "zod";
 
 type QueuesSearch = {
@@ -74,7 +75,10 @@ function Queues() {
             <div className="flex justify-between">
                 <h1 className="text-2xl font-bold">Queues 🧑‍💻</h1>
                 <RefreshButton
-                    onClick={() => queryClient.invalidateQueries({ queryKey })}
+                    onClick={() => {
+                        void queryClient.invalidateQueries({ queryKey });
+                        toast("Refreshing ♻️");
+                    }}
                 />
             </div>
             <QueuesTable

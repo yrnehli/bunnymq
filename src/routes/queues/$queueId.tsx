@@ -122,7 +122,12 @@ function Queue() {
                         onPurge={() => invalidateQueries()}
                     />
                     <ViewMessages queue={queue} messages={messages} />
-                    <RefreshButton onClick={() => invalidateQueries()} />
+                    <RefreshButton
+                        onClick={() => {
+                            invalidateQueries();
+                            toast("Refreshing ♻️");
+                        }}
+                    />
                 </div>
             </div>
             <div>
