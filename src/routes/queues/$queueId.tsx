@@ -153,8 +153,8 @@ function Queue() {
                     <SyntaxHighlighter>{output}</SyntaxHighlighter>
                 ) : (
                     <div className="text-red-600">
-                        Invalid message construction, expected a string to be
-                        returned!
+                        Invalid message construction, expected a non-empty
+                        string to be returned!
                     </div>
                 )}
             </div>
