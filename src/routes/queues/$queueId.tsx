@@ -85,9 +85,21 @@ function Queue() {
         queryFn: () => api.messages(queueId),
     });
 
+    const invalidateQueries = () => {
+        void queryClient.invalidateQueries({
+            queryKey: queryKeys.queue,
+        });
+        void queryClient.invalidateQueries({
+            queryKey: queryKeys.messages,
+        });
+    };
+
     const publishMessage = useMutation({
         mutationFn: (message: string) => api.publish(queueId, message),
-        onSuccess: () => toast("Successfully published message ✅"),
+        onSuccess: () => {
+            toast("Successfully published message ✅");
+            invalidateQueries();
+        },
         onError: () => toast("Failed to publish message ⛔"),
     });
 
@@ -105,18 +117,12 @@ function Queue() {
                     <QueueInfo queue={queue} />
                 </div>
                 <div className="col-span-12 mt-1 flex md:col-span-2 md:mt-0 md:justify-end">
-                    <PurgeMessages queue={queue} />
-                    <ViewMessages queue={queue} messages={messages} />
-                    <RefreshButton
-                        onClick={() => {
-                            void queryClient.invalidateQueries({
-                                queryKey: queryKeys.queue,
-                            });
-                            void queryClient.invalidateQueries({
-                                queryKey: queryKeys.messages,
-                            });
-                        }}
+                    <PurgeMessages
+                        queue={queue}
+                        onPurge={() => invalidateQueries()}
                     />
+                    <ViewMessages queue={queue} messages={messages} />
+                    <RefreshButton onClick={() => invalidateQueries()} />
                 </div>
             </div>
             <div>
@@ -267,12 +273,16 @@ function ViewMessages({ queue, messages }: ViewMessagesProps) {
 
 type PurgeMessagesProps = {
     queue: api.Queue;
+    onPurge?: VoidFunction;
 };
 
-function PurgeMessages({ queue }: PurgeMessagesProps) {
+function PurgeMessages({ queue, onPurge }: PurgeMessagesProps) {
     const purge = useMutation({
         mutationFn: () => api.purge(queue.name),
-        onSuccess: () => toast("Successfully purged messages ✅"),
+        onSuccess: () => {
+            toast("Successfully purged messages ✅");
+            onPurge && onPurge();
+        },
         onError: () => toast("Failed to purge messages ⛔"),
     });
 
