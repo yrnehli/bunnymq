@@ -239,7 +239,7 @@ function ViewMessages({ queue, messages }: ViewMessagesProps) {
                     </div>
                 </TooltipBasic>
             </SheetTrigger>
-            <SheetContent className="w-full max-w-full overflow-scroll sm:max-w-full lg:w-3/4 2xl:w-1/2">
+            <SheetContent className="w-full max-w-full overflow-y-scroll sm:max-w-full lg:w-3/4 2xl:w-1/2">
                 <SheetHeader className="mb-3">
                     <SheetTitle>Messages</SheetTitle>
                     <SheetDescription>
