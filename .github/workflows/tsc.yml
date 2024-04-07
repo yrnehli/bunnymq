@@ -1,4 +1,4 @@
-name: Prettier
+name: TypeScript
 
 on:
     push:
@@ -9,7 +9,7 @@ on:
             - main
 
 jobs:
-    prettier:
+    typescript:
         runs-on: ubuntu-latest
         steps:
             - name: checkout
@@ -18,10 +18,10 @@ jobs:
               name: cache
               with:
                   path: ~/.npm
-                  key: ${{ runner.os }}-npm-${{ hashFiles('**/workflows/prettier.yml') }}
+                  key: ${{ runner.os }}-npm-${{ hashFiles('**/workflows/tsc.yml') }}
                   restore-keys: |
                       ${{ runner.os }}-npm-
-            - name: prettier
+            - name: typescript
               run: |-
-                  npm install prettier-plugin-tailwindcss
-                  npx prettier src --ignore-unknown --list-different
+                  npm install
+                  npx tsc --noEmit
