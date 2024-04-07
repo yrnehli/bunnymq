@@ -1,0 +1,22 @@
+name: TypeScript
+
+on:
+    push:
+    pull_request:
+
+jobs:
+    prettier:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v2
+            - uses: actions/cache@v2
+              name: cache
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-npm-${{ hashFiles('**/workflows/tsc.yml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-npm-
+            - name: typescript
+              run: |-
+                  npx tsc --noEmit

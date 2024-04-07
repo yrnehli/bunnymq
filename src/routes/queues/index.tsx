@@ -13,7 +13,7 @@ type QueuesSearch = {
     columnVisibility?: VisibilityState;
 };
 
-const queuesSearchSchema: z.ZodType<QueuesSearch> = z.object({
+const queuesSearchSchema: z.ZodType<QueuesSdsadsadarch> = z.object({
     sorting: z
         .array(
             z.object({
