@@ -9,7 +9,8 @@ A modern web interface to manage your RabbitMQ queues. Built using React, with a
 -   Multiple environments 🌲
 -   View queues 🔁
 -   Purge/view messages 👀
--   Construct queue messages using TypeScript 💬
+-   Construct queue messages using TypeScript 🚧
+-   Pretty printing 💅
 -   Dark mode 🌚
 
 ## Installation
