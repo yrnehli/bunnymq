@@ -19,4 +19,5 @@ jobs:
                       ${{ runner.os }}-npm-
             - name: prettier
               run: |-
+                  npm install prettier-plugin-tailwindcss
                   npx prettier src --ignore-unknown --list-different
