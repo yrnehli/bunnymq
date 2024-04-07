@@ -1,4 +1,4 @@
-name: Prettier
+name: ESLint
 
 on:
     push:
@@ -9,7 +9,7 @@ on:
             - main
 
 jobs:
-    prettier:
+    eslint:
         runs-on: ubuntu-latest
         steps:
             - name: checkout
@@ -18,10 +18,10 @@ jobs:
               uses: actions/cache@v2
               with:
                   path: ~/.npm
-                  key: ${{ runner.os }}-npm-${{ hashFiles('**/workflows/prettier.yml') }}
+                  key: ${{ runner.os }}-npm-${{ hashFiles('**/workflows/eslint.yml') }}
                   restore-keys: |
                       ${{ runner.os }}-npm-
-            - name: prettier
+            - name: eslint
               run: |-
                   npm install
-                  npx prettier src --ignore-unknown --list-different
+                  npx eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0
