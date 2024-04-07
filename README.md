@@ -1,6 +1,7 @@
 # BunnyMQ
 
 ![TypeScript Workflow](https://github.com/yrnehli/bunnymq/actions/workflows/tsc.yml/badge.svg)
+![ESLint Workflow](https://github.com/yrnehli/bunnymq/actions/workflows/eslint.yml/badge.svg)
 ![Prettier Workflow](https://github.com/yrnehli/bunnymq/actions/workflows/prettier.yml/badge.svg)
 
 A modern web interface to manage your RabbitMQ queues. Built using React, with a focus on type safety.
