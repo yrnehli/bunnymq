@@ -19,4 +19,4 @@ jobs:
                       ${{ runner.os }}-npm-
             - name: prettier
               run: |-
-                  npx prettier --check src --ignore-unknown --list-different
+                  npx prettier src --ignore-unknown --list-different
