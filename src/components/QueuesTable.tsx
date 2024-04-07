@@ -9,18 +9,18 @@ import {
     getFilteredRowModel,
     getSortedRowModel,
     useReactTable,
-} from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown } from "lucide-react";
+} from '@tanstack/react-table';
+import { ArrowUpDown, ChevronDown } from 'lucide-react';
 
-import { QueueTablesSkeleton } from "@/components/skeletons/QueuesTableSkeleton";
-import { Button } from "@/components/ui/button";
+import { QueueTablesSkeleton } from '@/components/skeletons/QueuesTableSkeleton';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import {
     Table,
     TableBody,
@@ -28,12 +28,12 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import { Queue, queues } from "@/lib/api";
-import { Updater, useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { z } from "zod";
+} from '@/components/ui/table';
+import { Queue, queues } from '@/lib/api';
+import { Updater, useQuery } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { z } from 'zod';
 
 function SortableHeader(props: {
     column: Column<Queue>;
@@ -44,7 +44,7 @@ function SortableHeader(props: {
     return (
         <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             className="px-0 hover:bg-transparent"
         >
             {children}
@@ -55,39 +55,39 @@ function SortableHeader(props: {
 
 const columns: ColumnDef<Queue>[] = [
     {
-        accessorKey: "name",
+        accessorKey: 'name',
         header: ({ column }) => (
             <SortableHeader column={column}>Name</SortableHeader>
         ),
-        cell: ({ row }) => <div>{row.getValue("name")}</div>,
+        cell: ({ row }) => <div>{row.getValue('name')}</div>,
     },
     {
-        accessorKey: "consumers",
+        accessorKey: 'consumers',
         header: ({ column }) => (
             <SortableHeader column={column}>Consumers</SortableHeader>
         ),
-        cell: ({ row }) => <div>{row.getValue("consumers")}</div>,
+        cell: ({ row }) => <div>{row.getValue('consumers')}</div>,
     },
     {
-        accessorKey: "ready",
+        accessorKey: 'ready',
         header: ({ column }) => (
             <SortableHeader column={column}>Ready</SortableHeader>
         ),
-        cell: ({ row }) => <div>{row.getValue("ready")}</div>,
+        cell: ({ row }) => <div>{row.getValue('ready')}</div>,
     },
     {
-        accessorKey: "unacked",
+        accessorKey: 'unacked',
         header: ({ column }) => (
             <SortableHeader column={column}>Unacked</SortableHeader>
         ),
-        cell: ({ row }) => <div>{row.getValue("unacked")}</div>,
+        cell: ({ row }) => <div>{row.getValue('unacked')}</div>,
     },
     {
-        accessorKey: "total",
+        accessorKey: 'total',
         header: ({ column }) => (
             <SortableHeader column={column}>Total</SortableHeader>
         ),
-        cell: ({ row }) => <div>{row.getValue("total")}</div>,
+        cell: ({ row }) => <div>{row.getValue('total')}</div>,
     },
 ];
 
@@ -148,14 +148,14 @@ export function QueuesTable({
                     placeholder="Filter queues..."
                     value={z
                         .string()
-                        .catch("")
+                        .catch('')
                         .parse(
-                            columnFilters.find((filter) => filter.id === "name")
+                            columnFilters.find((filter) => filter.id === 'name')
                                 ?.value,
                         )}
                     onChange={(event) =>
                         table
-                            .getColumn("name")
+                            .getColumn('name')
                             ?.setFilterValue(event.target.value)
                     }
                     className="col-span-2 max-w-full sm:col-span-1 sm:max-w-sm"
@@ -222,7 +222,7 @@ export function QueuesTable({
                                                 params={{
                                                     queueId:
                                                         row.getValue<string>(
-                                                            "name",
+                                                            'name',
                                                         ),
                                                 }}
                                             >

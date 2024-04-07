@@ -1,10 +1,10 @@
-import { Ping } from "@/components/Ping";
-import { RefreshButton } from "@/components/RefreshButton";
-import { Spinner } from "@/components/Spinner";
-import { SyntaxHighlighter } from "@/components/SyntaxHighlighter";
-import { useTheme } from "@/components/ThemeProvider";
-import { TooltipBasic } from "@/components/TooltipBasic";
-import { QueueSkeleton } from "@/components/skeletons/QueueSkeleton";
+import { Ping } from '@/components/Ping';
+import { RefreshButton } from '@/components/RefreshButton';
+import { Spinner } from '@/components/Spinner';
+import { SyntaxHighlighter } from '@/components/SyntaxHighlighter';
+import { useTheme } from '@/components/ThemeProvider';
+import { TooltipBasic } from '@/components/TooltipBasic';
+import { QueueSkeleton } from '@/components/skeletons/QueueSkeleton';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -15,8 +15,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 import {
     Sheet,
     SheetContent,
@@ -24,21 +24,21 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from "@/components/ui/sheet";
-import * as api from "@/lib/api";
-import { cn } from "@/lib/utils";
-import { checkAuthenticated } from "@/routes/__root";
-import Editor from "@monaco-editor/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useParams } from "@tanstack/react-router";
-import dedent from "dedent";
-import { Copy, OctagonX, Search } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-import ts from "typescript";
-import { useCopyToClipboard } from "usehooks-ts";
+} from '@/components/ui/sheet';
+import * as api from '@/lib/api';
+import { cn } from '@/lib/utils';
+import { checkAuthenticated } from '@/routes/__root';
+import Editor from '@monaco-editor/react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createFileRoute, useParams } from '@tanstack/react-router';
+import dedent from 'dedent';
+import { Copy, OctagonX, Search } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import ts from 'typescript';
+import { useCopyToClipboard } from 'usehooks-ts';
 
-export const Route = createFileRoute("/queues/$queueId")({
+export const Route = createFileRoute('/queues/$queueId')({
     component: Queue,
     beforeLoad: async ({ location }) => await checkAuthenticated(location.href),
 });
@@ -57,7 +57,7 @@ const computeCode = (code: string) => {
     try {
         // eslint-disable-next-line @typescript-eslint/no-implied-eval
         const res: unknown = new Function(ts.transpile(code))();
-        return typeof res === "string" ? res.trim() : null;
+        return typeof res === 'string' ? res.trim() : null;
     } catch (e) {
         return null;
     }
@@ -65,14 +65,14 @@ const computeCode = (code: string) => {
 
 function Queue() {
     const { appearance } = useTheme();
-    const { queueId } = useParams({ from: "/queues/$queueId" });
+    const { queueId } = useParams({ from: '/queues/$queueId' });
     const [code, setCode] = useState(DEFAULT_CODE);
     const environment = api.getEnvironment();
     const queryClient = useQueryClient();
     const output = computeCode(code);
     const queryKeys = {
-        queue: ["queue", queueId],
-        messages: ["messages", queueId],
+        queue: ['queue', queueId],
+        messages: ['messages', queueId],
     } as const;
 
     const { data: queue, isFetching: queueFetching } = useQuery({
@@ -97,10 +97,10 @@ function Queue() {
     const publishMessage = useMutation({
         mutationFn: (message: string) => api.publish(queueId, message),
         onSuccess: () => {
-            toast("Successfully published message ✅");
+            toast('Successfully published message ✅');
             invalidateQueries();
         },
-        onError: () => toast("Failed to publish message ⛔"),
+        onError: () => toast('Failed to publish message ⛔'),
     });
 
     if (!queue || !messages) {
@@ -135,13 +135,13 @@ function Queue() {
                 <Editor
                     height="400px"
                     className="max-w-full border"
-                    theme={appearance === "dark" ? "vs-dark" : "light"}
+                    theme={appearance === 'dark' ? 'vs-dark' : 'light'}
                     defaultLanguage="typescript"
                     defaultValue={code}
                     onChange={(value) => value && setCode(value)}
                     options={{
                         minimap: { enabled: false },
-                        scrollbar: { vertical: "hidden" },
+                        scrollbar: { vertical: 'hidden' },
                         hideCursorInOverviewRuler: true,
                         overviewRulerBorder: false,
                         automaticLayout: true,
@@ -162,11 +162,11 @@ function Queue() {
                 )}
             </div>
             <div>
-                {["prod", "production"].includes(environment) && (
+                {['prod', 'production'].includes(environment) && (
                     <div className="mb-3 text-red-600">
                         <span className="font-bold">Warning</span>: you are
-                        publishing this message to a{" "}
-                        <span className="font-bold">production</span>{" "}
+                        publishing this message to a{' '}
+                        <span className="font-bold">production</span>{' '}
                         environment!
                     </div>
                 )}
@@ -190,24 +190,24 @@ function QueueInfo({ queue }: QueueInfoProps) {
     return (
         <div className="flex flex-col gap-x-8 sm:flex-row">
             <div className="flex flex-row items-center gap-x-3">
-                <Ping variant={queue.consumers > 0 ? "green" : "red"} />
+                <Ping variant={queue.consumers > 0 ? 'green' : 'red'} />
                 <small>
-                    <span className="font-bold">{queue.consumers}</span>{" "}
-                    {queue.consumers === 1 ? "consumer" : "consumers"}
+                    <span className="font-bold">{queue.consumers}</span>{' '}
+                    {queue.consumers === 1 ? 'consumer' : 'consumers'}
                 </small>
             </div>
             <div className="flex flex-row items-center gap-x-3">
-                <Ping variant={queue.ready > 0 ? "amber" : "green"} />
+                <Ping variant={queue.ready > 0 ? 'amber' : 'green'} />
                 <small>
-                    <span className="font-bold">{queue.ready}</span>{" "}
-                    {queue.ready === 1 ? "message" : "messages"} ready
+                    <span className="font-bold">{queue.ready}</span>{' '}
+                    {queue.ready === 1 ? 'message' : 'messages'} ready
                 </small>
             </div>
             <div className="flex flex-row items-center gap-x-3">
-                <Ping variant={queue.unacked > 0 ? "red" : "green"} />
+                <Ping variant={queue.unacked > 0 ? 'red' : 'green'} />
                 <small>
-                    <span className="font-bold">{queue.unacked}</span>{" "}
-                    {queue.unacked === 1 ? "message" : "messages"}{" "}
+                    <span className="font-bold">{queue.unacked}</span>{' '}
+                    {queue.unacked === 1 ? 'message' : 'messages'}{' '}
                     unacknowledged
                 </small>
             </div>
@@ -231,8 +231,8 @@ function ViewMessages({ queue, messages }: ViewMessagesProps) {
                 <TooltipBasic message="View Messages">
                     <div
                         className={cn(
-                            "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-                            "h-10 w-10 hover:bg-accent hover:text-accent-foreground",
+                            'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+                            'h-10 w-10 hover:bg-accent hover:text-accent-foreground',
                         )}
                     >
                         <Search className="h-[1.2rem] w-[1.2rem]" />
@@ -243,16 +243,16 @@ function ViewMessages({ queue, messages }: ViewMessagesProps) {
                 <SheetHeader className="mb-3">
                     <SheetTitle>Messages</SheetTitle>
                     <SheetDescription>
-                        Displaying the first{" "}
+                        Displaying the first{' '}
                         <span className="font-bold">
                             {!singleMessage && messagesCount}
-                        </span>{" "}
-                        {singleMessage ? "message" : "messages"} of{" "}
+                        </span>{' '}
+                        {singleMessage ? 'message' : 'messages'} of{' '}
                         <span className="italic">{queue.name}</span>.
                     </SheetDescription>
                 </SheetHeader>
                 {messages.map((message, i) => (
-                    <div key={i} className={cn("py-3", i > 0 && "border-t")}>
+                    <div key={i} className={cn('py-3', i > 0 && 'border-t')}>
                         <div className="mb-1 flex items-center">
                             <small className="mr-2 uppercase opacity-60">
                                 Message {i + 1}
@@ -260,7 +260,7 @@ function ViewMessages({ queue, messages }: ViewMessagesProps) {
                             <button
                                 onClick={() => {
                                     void copy(message);
-                                    toast("Copied to clipboard 📋");
+                                    toast('Copied to clipboard 📋');
                                 }}
                             >
                                 <Copy className="h-[12px] w-[12px]" />
@@ -283,10 +283,10 @@ function PurgeMessages({ queue, onPurge }: PurgeMessagesProps) {
     const purge = useMutation({
         mutationFn: () => api.purge(queue.name),
         onSuccess: () => {
-            toast("Successfully purged messages ✅");
+            toast('Successfully purged messages ✅');
             onPurge && onPurge();
         },
-        onError: () => toast("Failed to purge messages ⛔"),
+        onError: () => toast('Failed to purge messages ⛔'),
     });
 
     return (
@@ -309,11 +309,11 @@ function PurgeMessages({ queue, onPurge }: PurgeMessagesProps) {
                         Are you absolutely sure?
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will{" "}
+                        This action cannot be undone. This will{' '}
                         <span className="font-bold text-red-500">
                             permanently
-                        </span>{" "}
-                        purge the messages from{" "}
+                        </span>{' '}
+                        purge the messages from{' '}
                         <span className="italic">{queue.name}</span>.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
