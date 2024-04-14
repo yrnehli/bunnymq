@@ -1,8 +1,7 @@
+import { Link } from "@tanstack/react-router";
 import { ChevronRight, MoreHorizontal } from "lucide-react";
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
-import { Link } from "@tanstack/react-router";
 
 const Breadcrumb = React.forwardRef<
     HTMLElement,

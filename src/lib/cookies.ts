@@ -1,5 +1,5 @@
-import { CONFIG } from "@/config";
 import dedent from "dedent";
+import { CONFIG } from "@/config";
 
 export function setCookie(name: string, value: string) {
     document.cookie = dedent`

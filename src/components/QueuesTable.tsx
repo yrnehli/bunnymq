@@ -1,3 +1,5 @@
+import { Updater, useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import {
     Column,
     ColumnDef,
@@ -11,7 +13,8 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown } from "lucide-react";
-
+import { useEffect, useState } from "react";
+import { z } from "zod";
 import { QueueTablesSkeleton } from "@/components/skeletons/QueuesTableSkeleton";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,10 +33,6 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Queue, queues } from "@/lib/api";
-import { Updater, useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { z } from "zod";
 
 function SortableHeader(props: {
     column: Column<Queue>;

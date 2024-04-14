@@ -1,6 +1,6 @@
-import { assert, expr } from "@/lib/utils";
 import { createContext, useContext, useEffect, useState } from "react";
 import { z } from "zod";
+import { assert, expr } from "@/lib/utils";
 
 const THEMES = ["dark", "light", "system"] as const;
 const themeSchema = z.enum(THEMES).catch("system");

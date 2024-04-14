@@ -1,3 +1,9 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { Spinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,12 +26,6 @@ import { ENVIRONMENT_NAMES } from "@/config";
 import * as api from "@/lib/api";
 import { isAuthenticated } from "@/lib/auth";
 import { setCookie } from "@/lib/cookies";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 const loginSearchSchema = z.object({
     next: z.string().optional(),

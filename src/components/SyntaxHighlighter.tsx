@@ -1,7 +1,7 @@
-import { useTheme } from "@/components/ThemeProvider";
 import { Light } from "react-syntax-highlighter";
 import json from "react-syntax-highlighter/dist/esm/languages/hljs/json";
 import { vs, vs2015 } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { useTheme } from "@/components/ThemeProvider";
 
 Light.registerLanguage("json", json);
 

@@ -1,7 +1,7 @@
-import { CONFIG, environmentNameSchema } from "@/config";
-import { pprint } from "@/lib/utils";
 import axios, { Method } from "axios";
 import { z } from "zod";
+import { CONFIG, environmentNameSchema } from "@/config";
+import { pprint } from "@/lib/utils";
 import { getCookie } from "./cookies";
 
 const queueSchema = z.object({

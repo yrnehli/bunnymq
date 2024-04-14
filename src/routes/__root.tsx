@@ -1,8 +1,3 @@
-import { ErrorPage } from "@/components/ErrorPage";
-import { NavigationBar } from "@/components/NavigationBar";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { Toaster } from "@/components/ui/sonner";
-import { isAuthenticated } from "@/lib/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
     CatchBoundary,
@@ -10,6 +5,11 @@ import {
     createRootRoute,
     redirect,
 } from "@tanstack/react-router";
+import { ErrorPage } from "@/components/ErrorPage";
+import { NavigationBar } from "@/components/NavigationBar";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
+import { isAuthenticated } from "@/lib/auth";
 
 const queryClient = new QueryClient({
     defaultOptions: { queries: { throwOnError: true } },
