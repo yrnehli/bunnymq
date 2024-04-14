@@ -1,5 +1,5 @@
-import { Spinner } from '@/components/Spinner';
-import { Button } from '@/components/ui/button';
+import { Spinner } from "@/components/Spinner";
+import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -7,31 +7,31 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { ENVIRONMENT_NAMES } from '@/config';
-import * as api from '@/lib/api';
-import { isAuthenticated } from '@/lib/auth';
-import { setCookie } from '@/lib/cookies';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+} from "@/components/ui/select";
+import { ENVIRONMENT_NAMES } from "@/config";
+import * as api from "@/lib/api";
+import { isAuthenticated } from "@/lib/auth";
+import { setCookie } from "@/lib/cookies";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const loginSearchSchema = z.object({
     next: z.string().optional(),
 });
 
-export const Route = createFileRoute('/login')({
+export const Route = createFileRoute("/login")({
     component: Login,
     validateSearch: (search: Record<string, unknown>) => {
         return loginSearchSchema.parse(search);
@@ -40,7 +40,7 @@ export const Route = createFileRoute('/login')({
         const authenticated = await isAuthenticated();
         if (authenticated) {
             throw redirect({
-                to: '/',
+                to: "/",
             });
         }
     },
@@ -49,10 +49,10 @@ export const Route = createFileRoute('/login')({
 const loginFormSchema = z.object({
     environment: z.enum(ENVIRONMENT_NAMES),
     username: z.string().min(1, {
-        message: 'Username must be at least 1 character.',
+        message: "Username must be at least 1 character.",
     }),
     password: z.string().min(1, {
-        message: 'Password must be at least 1 character.',
+        message: "Password must be at least 1 character.",
     }),
 });
 type LoginForm = z.infer<typeof loginFormSchema>;
@@ -65,8 +65,8 @@ function Login() {
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
             environment: ENVIRONMENT_NAMES[0],
-            username: '',
-            password: '',
+            username: "",
+            password: "",
         },
     });
 
@@ -74,15 +74,15 @@ function Login() {
         mutationFn: (values: LoginForm) => {
             const credentials = btoa(`${values.username}:${values.password}`);
 
-            setCookie('credentials', credentials);
-            setCookie('environment', values.environment);
+            setCookie("credentials", credentials);
+            setCookie("environment", values.environment);
 
             return api.login(credentials);
         },
-        onSuccess: () => navigate({ to: next ?? '/', replace: true }),
+        onSuccess: () => navigate({ to: next ?? "/", replace: true }),
         onError: () => {
-            toast('Login Failed ⛔', {
-                description: 'Please try again!',
+            toast("Login Failed ⛔", {
+                description: "Please try again!",
             });
         },
     });

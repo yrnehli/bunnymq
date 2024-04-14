@@ -1,8 +1,8 @@
-import { CONFIG, environmentNameSchema } from '@/config';
-import { pprint } from '@/lib/utils';
-import axios, { Method } from 'axios';
-import { z } from 'zod';
-import { getCookie } from './cookies';
+import { CONFIG, environmentNameSchema } from "@/config";
+import { pprint } from "@/lib/utils";
+import axios, { Method } from "axios";
+import { z } from "zod";
+import { getCookie } from "./cookies";
 
 const queueSchema = z.object({
     name: z.string(),
@@ -33,11 +33,11 @@ const rabbitMqMessagesSchema = z.array(
 type RabbitMqMessages = z.infer<typeof rabbitMqMessagesSchema>;
 
 export function login(credentials: string): Promise<unknown> {
-    return request('GET', 'whoami', { credentials });
+    return request("GET", "whoami", { credentials });
 }
 
 export async function queues() {
-    const res = await request('GET', 'queues');
+    const res = await request("GET", "queues");
     const rabbitMqQueues = rabbitMqQueuesSchema.parse(res);
     const queues = rabbitMqQueues
         .map(transformQueue)
@@ -47,7 +47,7 @@ export async function queues() {
 }
 
 export async function queue(queueId: string) {
-    const res = await request('GET', `queues/%2F/${queueId}`);
+    const res = await request("GET", `queues/%2F/${queueId}`);
     const rabbitMqQueue = rabbitMqQueueSchema.parse(res);
     const queue = transformQueue(rabbitMqQueue);
 
@@ -55,14 +55,14 @@ export async function queue(queueId: string) {
 }
 
 export async function messages(queueId: string) {
-    const res = await request('POST', `queues/%2F/${queueId}/get`, {
+    const res = await request("POST", `queues/%2F/${queueId}/get`, {
         data: {
-            vhost: '/',
+            vhost: "/",
             name: queueId,
-            truncate: '50000',
-            ackmode: 'ack_requeue_true',
-            encoding: 'auto',
-            count: '10',
+            truncate: "50000",
+            ackmode: "ack_requeue_true",
+            encoding: "auto",
+            count: "10",
         },
     });
     const rabbitMqMessages = rabbitMqMessagesSchema.parse(res);
@@ -72,18 +72,18 @@ export async function messages(queueId: string) {
 }
 
 export async function publish(routingKey: string, payload: string) {
-    return request('POST', 'exchanges/%2F/amq.default/publish', {
+    return request("POST", "exchanges/%2F/amq.default/publish", {
         data: {
-            vhost: '/',
-            name: 'amq.default',
+            vhost: "/",
+            name: "amq.default",
             properties: {
                 delivery_mode: 2,
                 headers: {},
             },
             routing_key: routingKey,
-            delivery_mode: '2',
+            delivery_mode: "2",
             payload: payload,
-            payload_encoding: 'string',
+            payload_encoding: "string",
             headers: {},
             props: {},
         },
@@ -91,17 +91,17 @@ export async function publish(routingKey: string, payload: string) {
 }
 
 export async function purge(queueId: string) {
-    return request('DELETE', `queues/%2F/${queueId}/contents`, {
+    return request("DELETE", `queues/%2F/${queueId}/contents`, {
         data: {
-            vhost: '/',
+            vhost: "/",
             name: queueId,
-            mode: 'purge',
+            mode: "purge",
         },
     });
 }
 
 export function getEnvironment() {
-    return environmentNameSchema.parse(getCookie('environment'));
+    return environmentNameSchema.parse(getCookie("environment"));
 }
 
 function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue | null {
@@ -139,14 +139,14 @@ async function request<T = unknown>(
 ) {
     const { credentials, data } = options;
     const apiUrl = `${getBaseUrl()}/api/${endpoint}`;
-    const url = CONFIG.useProxy ? 'http://localhost:5174' : apiUrl;
+    const url = CONFIG.useProxy ? "http://localhost:5174" : apiUrl;
 
     const res = await axios.request({
         method: method,
         url: url,
         params: { ...(CONFIG.useProxy && { proxy: apiUrl }) },
         headers: {
-            'Authorization': `Basic ${credentials ?? getCookie('credentials')}`,
+            "Authorization": `Basic ${credentials ?? getCookie("credentials")}`,
         },
         data: data,
     });

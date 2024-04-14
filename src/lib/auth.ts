@@ -1,8 +1,8 @@
-import { login } from '@/lib/api';
-import { deleteCookie, getCookie } from './cookies';
+import { login } from "@/lib/api";
+import { deleteCookie, getCookie } from "./cookies";
 
 export async function isAuthenticated() {
-    const credentials = getCookie('credentials');
+    const credentials = getCookie("credentials");
 
     if (credentials === null) {
         unauthenticate();
@@ -20,6 +20,6 @@ export async function isAuthenticated() {
 }
 
 export function unauthenticate() {
-    deleteCookie('credentials');
-    deleteCookie('environment');
+    deleteCookie("credentials");
+    deleteCookie("environment");
 }

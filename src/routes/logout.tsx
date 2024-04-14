@@ -1,9 +1,9 @@
-import { unauthenticate } from '@/lib/auth';
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { unauthenticate } from "@/lib/auth";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/logout')({
+export const Route = createFileRoute("/logout")({
     beforeLoad: () => {
         unauthenticate();
-        throw redirect({ to: '/login' });
+        throw redirect({ to: "/login" });
     },
 });

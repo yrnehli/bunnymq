@@ -1,5 +1,5 @@
-import { CONFIG } from '@/config';
-import dedent from 'dedent';
+import { CONFIG } from "@/config";
+import dedent from "dedent";
 
 export function setCookie(name: string, value: string) {
     document.cookie = dedent`
@@ -8,8 +8,8 @@ export function setCookie(name: string, value: string) {
 }
 
 export function getCookie(name: string) {
-    for (const cookie of document.cookie.split('; ')) {
-        const [cookieName, cookieValue] = cookie.split('=');
+    for (const cookie of document.cookie.split("; ")) {
+        const [cookieName, cookieValue] = cookie.split("=");
 
         if (cookieName === name && cookieValue !== undefined) {
             return decodeURIComponent(cookieValue);

@@ -1,6 +1,6 @@
-import { Ping } from '@/components/Ping';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { TooltipBasic } from '@/components/TooltipBasic';
+import { Ping } from "@/components/Ping";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { TooltipBasic } from "@/components/TooltipBasic";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -8,17 +8,17 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Button } from '@/components/ui/button';
-import { getCookie } from '@/lib/cookies';
-import { cn } from '@/lib/utils';
-import { Link, useRouterState } from '@tanstack/react-router';
-import { LogOut } from 'lucide-react';
-import { useOverflowDetector } from 'react-detectable-overflow';
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { getCookie } from "@/lib/cookies";
+import { cn } from "@/lib/utils";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { LogOut } from "lucide-react";
+import { useOverflowDetector } from "react-detectable-overflow";
 
 export function NavigationBar() {
-    const credentials = getCookie('credentials');
-    const environment = getCookie('environment');
+    const credentials = getCookie("credentials");
+    const environment = getCookie("environment");
     const loggedIn = credentials !== null;
 
     return (
@@ -56,7 +56,7 @@ export function NavigationBar() {
 function Breadcrumbs() {
     const router = useRouterState();
     const routeFragments = router.location.pathname
-        .split('/')
+        .split("/")
         .filter(Boolean)
         .map(decodeURIComponent);
     const { ref, overflow } = useOverflowDetector();
@@ -67,14 +67,14 @@ function Breadcrumbs() {
 
     const breadcrumbs = routeFragments.map((fragment, i) => ({
         title: fragment,
-        path: '/' + routeFragments.slice(0, i + 1).join('/'),
+        path: "/" + routeFragments.slice(0, i + 1).join("/"),
     }));
 
     return (
         <Breadcrumb
             className={cn(
-                'hidden h-[20px] overflow-clip sm:block',
-                overflow && 'opacity-0',
+                "hidden h-[20px] overflow-clip sm:block",
+                overflow && "opacity-0",
             )}
             ref={ref}
         >

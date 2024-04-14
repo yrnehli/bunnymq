@@ -1,12 +1,12 @@
-import { QueuesTable } from '@/components/QueuesTable';
-import { RefreshButton } from '@/components/RefreshButton';
-import { getCookie } from '@/lib/cookies';
-import { checkAuthenticated } from '@/routes/__root';
-import { Updater, useQueryClient } from '@tanstack/react-query';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { SortingState, VisibilityState } from '@tanstack/react-table';
-import { useState } from 'react';
-import { z } from 'zod';
+import { QueuesTable } from "@/components/QueuesTable";
+import { RefreshButton } from "@/components/RefreshButton";
+import { getCookie } from "@/lib/cookies";
+import { checkAuthenticated } from "@/routes/__root";
+import { Updater, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { SortingState, VisibilityState } from "@tanstack/react-table";
+import { useState } from "react";
+import { z } from "zod";
 
 type QueuesSearch = {
     sorting?: SortingState;
@@ -25,7 +25,7 @@ const queuesSearchSchema: z.ZodType<QueuesSearch> = z.object({
     columnVisibility: z.record(z.string(), z.boolean()).optional(),
 });
 
-export const Route = createFileRoute('/queues/')({
+export const Route = createFileRoute("/queues/")({
     component: Queues,
     validateSearch: (search: Record<string, unknown>) => {
         return queuesSearchSchema.parse(search);
@@ -38,13 +38,13 @@ function Queues() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [fetching, setFetching] = useState(false);
-    const environment = getCookie('environment');
-    const queryKey = ['queues', environment];
+    const environment = getCookie("environment");
+    const queryKey = ["queues", environment];
 
     const onColumnVisibilityChange = (
         updateFn: Updater<VisibilityState, VisibilityState>,
     ) => {
-        if (typeof updateFn !== 'function') {
+        if (typeof updateFn !== "function") {
             return;
         }
 
@@ -58,7 +58,7 @@ function Queues() {
     };
 
     const onSortingChange = (updateFn: Updater<SortingState, SortingState>) => {
-        if (typeof updateFn !== 'function') {
+        if (typeof updateFn !== "function") {
             return;
         }
 

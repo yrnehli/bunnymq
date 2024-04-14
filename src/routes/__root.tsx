@@ -1,15 +1,15 @@
-import { ErrorPage } from '@/components/ErrorPage';
-import { NavigationBar } from '@/components/NavigationBar';
-import { ThemeProvider } from '@/components/ThemeProvider';
-import { Toaster } from '@/components/ui/sonner';
-import { isAuthenticated } from '@/lib/auth';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ErrorPage } from "@/components/ErrorPage";
+import { NavigationBar } from "@/components/NavigationBar";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
+import { isAuthenticated } from "@/lib/auth";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
     CatchBoundary,
     Outlet,
     createRootRoute,
     redirect,
-} from '@tanstack/react-router';
+} from "@tanstack/react-router";
 
 const queryClient = new QueryClient({
     defaultOptions: { queries: { throwOnError: true } },
@@ -20,7 +20,7 @@ export const Route = createRootRoute({
         <QueryClientProvider client={queryClient}>
             <ThemeProvider>
                 <CatchBoundary
-                    getResetKey={() => 'reset'}
+                    getResetKey={() => "reset"}
                     onCatch={(error) => console.error(error)}
                     errorComponent={ErrorPage}
                 >
@@ -39,7 +39,7 @@ export async function checkAuthenticated(loginRedirect: string) {
     const authenticated = await isAuthenticated();
     if (!authenticated) {
         throw redirect({
-            to: '/login',
+            to: "/login",
             search: { next: loginRedirect },
         });
     }
