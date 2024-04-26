@@ -23,11 +23,11 @@ const initialState: ThemeProviderState = {
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
+const STORAGE_KEY = "theme";
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-    const storageKey = "theme" as const;
     const [theme, setTheme] = useState<Theme>(() =>
-        themeSchema.parse(localStorage.getItem(storageKey)),
+        themeSchema.parse(localStorage.getItem(STORAGE_KEY)),
     );
 
     const appearance = expr(() => {
@@ -50,7 +50,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
         appearance,
         theme,
         setTheme: (theme: Theme) => {
-            localStorage.setItem(storageKey, theme);
+            localStorage.setItem(STORAGE_KEY, theme);
             setTheme(theme);
         },
     };
