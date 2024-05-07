@@ -93,13 +93,13 @@ export type QueuesTableProps = {
     queryKey: unknown[];
     searchTerm?: string;
     columnVisibility: VisibilityState;
+    sorting: SortingState;
+    onSearchTermChange?: (searchTerm: string) => void;
     onColumnVisibilityChange: (
         updateFn: Updater<VisibilityState, VisibilityState>,
     ) => void;
-    sorting: SortingState;
     onSortingChange: (updateFn: Updater<SortingState, SortingState>) => void;
     onFetchingChange?: (isFetching: boolean) => void;
-    onSearchTermChange?: (searchTerm: string) => void;
 };
 
 export function QueuesTable({
