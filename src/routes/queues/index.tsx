@@ -11,6 +11,7 @@ import { checkAuthenticated } from "@/routes/__root";
 type QueuesSearch = {
     sorting?: SortingState;
     columnVisibility?: VisibilityState;
+    searchTerm?: string;
 };
 
 const queuesSearchSchema: z.ZodType<QueuesSearch> = z.object({
@@ -23,6 +24,7 @@ const queuesSearchSchema: z.ZodType<QueuesSearch> = z.object({
         )
         .optional(),
     columnVisibility: z.record(z.string(), z.boolean()).optional(),
+    searchTerm: z.string().optional(),
 });
 
 export const Route = createFileRoute("/queues/")({
@@ -71,6 +73,15 @@ function Queues() {
         });
     };
 
+    const onSearchTermChange = (searchTerm: string) => {
+        void navigate({
+            search: {
+                ...search,
+                searchTerm,
+            },
+        });
+    };
+
     return (
         <>
             <div className="flex justify-between">
@@ -82,11 +93,13 @@ function Queues() {
             </div>
             <QueuesTable
                 queryKey={queryKey}
+                searchTerm={search.searchTerm}
                 columnVisibility={search.columnVisibility ?? {}}
                 onColumnVisibilityChange={onColumnVisibilityChange}
                 sorting={search.sorting ?? []}
                 onSortingChange={onSortingChange}
                 onFetchingChange={(isFetching) => setFetching(isFetching)}
+                onSearchTermChange={onSearchTermChange}
             />
         </>
     );

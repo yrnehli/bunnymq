@@ -14,7 +14,6 @@ import {
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
-import { z } from "zod";
 import { QueueTablesSkeleton } from "@/components/skeletons/QueuesTableSkeleton";
 import { Button } from "@/components/ui/button";
 import {
@@ -92,6 +91,7 @@ const columns: ColumnDef<Queue>[] = [
 
 export type QueuesTableProps = {
     queryKey: unknown[];
+    searchTerm?: string;
     columnVisibility: VisibilityState;
     onColumnVisibilityChange: (
         updateFn: Updater<VisibilityState, VisibilityState>,
@@ -99,17 +99,23 @@ export type QueuesTableProps = {
     sorting: SortingState;
     onSortingChange: (updateFn: Updater<SortingState, SortingState>) => void;
     onFetchingChange?: (isFetching: boolean) => void;
+    onSearchTermChange?: (searchTerm: string) => void;
 };
 
 export function QueuesTable({
     queryKey,
+    searchTerm: initialSearchTerm = "",
     columnVisibility,
-    onColumnVisibilityChange,
     sorting,
+    onSearchTermChange,
+    onColumnVisibilityChange,
     onSortingChange,
     onFetchingChange,
 }: QueuesTableProps) {
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
+        { id: "name", value: searchTerm },
+    ]);
 
     const { data, isFetching } = useQuery({
         queryKey,
@@ -119,6 +125,14 @@ export function QueuesTable({
     useEffect(() => {
         onFetchingChange && onFetchingChange(isFetching);
     }, [isFetching, onFetchingChange]);
+
+    useEffect(() => {
+        const debounce = setTimeout(() => {
+            onSearchTermChange && onSearchTermChange(searchTerm);
+        }, 300);
+
+        return () => clearTimeout(debounce);
+    }, [onSearchTermChange, searchTerm]);
 
     const table = useReactTable({
         data: data ?? [],
@@ -145,18 +159,13 @@ export function QueuesTable({
             <div className="grid grid-cols-2 gap-y-2 py-4">
                 <Input
                     placeholder="Filter queues..."
-                    value={z
-                        .string()
-                        .catch("")
-                        .parse(
-                            columnFilters.find((filter) => filter.id === "name")
-                                ?.value,
-                        )}
-                    onChange={(event) =>
+                    value={searchTerm}
+                    onChange={(event) => {
+                        setSearchTerm(event.target.value);
                         table
                             .getColumn("name")
-                            ?.setFilterValue(event.target.value)
-                    }
+                            ?.setFilterValue(event.target.value);
+                    }}
                     className="col-span-2 max-w-full sm:col-span-1 sm:max-w-sm"
                 />
                 <div className="col-span-2 flex justify-end sm:col-span-1">
