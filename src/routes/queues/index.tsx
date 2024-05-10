@@ -56,6 +56,7 @@ function Queues() {
                 ...search,
                 columnVisibility: res,
             },
+            replace: true,
         });
     };
 
@@ -70,6 +71,7 @@ function Queues() {
                 ...search,
                 sorting: res,
             },
+            replace: true,
         });
     };
 
@@ -79,6 +81,7 @@ function Queues() {
                 ...search,
                 searchTerm,
             },
+            replace: true,
         });
     };
 

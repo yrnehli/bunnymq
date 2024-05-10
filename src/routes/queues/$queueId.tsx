@@ -1,12 +1,17 @@
 import Editor from "@monaco-editor/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useParams } from "@tanstack/react-router";
+import {
+    createFileRoute,
+    useNavigate,
+    useParams,
+} from "@tanstack/react-router";
 import dedent from "dedent";
 import { Copy, OctagonX, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import ts from "typescript";
 import { useCopyToClipboard } from "usehooks-ts";
+import { z } from "zod";
 import { Ping } from "@/components/Ping";
 import { RefreshButton } from "@/components/RefreshButton";
 import { Spinner } from "@/components/Spinner";
@@ -38,11 +43,6 @@ import * as api from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { checkAuthenticated } from "@/routes/__root";
 
-export const Route = createFileRoute("/queues/$queueId")({
-    component: Queue,
-    beforeLoad: async ({ location }) => await checkAuthenticated(location.href),
-});
-
 const DEFAULT_CODE = dedent`
     const pprint = (obj: object) => JSON.stringify(obj, null, 4);
 
@@ -52,6 +52,18 @@ const DEFAULT_CODE = dedent`
     // @ts-ignore: Return a string to publish to the queue
     return pprint([message, payload]);
 `;
+
+const queueSearchSchema = z.object({
+    code: z.string().optional(),
+});
+
+export const Route = createFileRoute("/queues/$queueId")({
+    component: Queue,
+    validateSearch: (search: Record<string, unknown>) => {
+        return queueSearchSchema.parse(search);
+    },
+    beforeLoad: async ({ location }) => await checkAuthenticated(location.href),
+});
 
 const computeCode = (code: string) => {
     try {
@@ -64,9 +76,11 @@ const computeCode = (code: string) => {
 };
 
 function Queue() {
+    const search = Route.useSearch();
+    const navigate = useNavigate();
     const { appearance } = useTheme();
     const { queueId } = useParams({ from: "/queues/$queueId" });
-    const [code, setCode] = useState(DEFAULT_CODE);
+    const [code, setCode] = useState(search.code ?? DEFAULT_CODE);
     const environment = api.getEnvironment();
     const queryClient = useQueryClient();
     const output = computeCode(code);
@@ -102,6 +116,19 @@ function Queue() {
         },
         onError: () => toast("Failed to publish message ⛔"),
     });
+
+    useEffect(() => {
+        const debounce = setTimeout(() => {
+            void navigate({
+                search: {
+                    code: code,
+                },
+                replace: true,
+            });
+        }, 300);
+
+        return () => clearTimeout(debounce);
+    }, [code, navigate]);
 
     if (!queue || !messages) {
         return <QueueSkeleton />;
