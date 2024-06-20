@@ -1,4 +1,4 @@
-import { Updater, useQuery } from "@tanstack/react-query";
+import { Updater, useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import {
     Column,
@@ -14,7 +14,6 @@ import {
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
-import { QueueTablesSkeleton } from "@/components/skeletons/QueuesTableSkeleton";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -117,7 +116,7 @@ export function QueuesTable({
         { id: "name", value: searchTerm },
     ]);
 
-    const { data, isFetching } = useQuery({
+    const { data, isFetching } = useSuspenseQuery({
         queryKey,
         queryFn: () => queues(),
     });
@@ -135,7 +134,7 @@ export function QueuesTable({
     }, [onSearchTermChange, searchTerm]);
 
     const table = useReactTable({
-        data: data ?? [],
+        data,
         columns,
         onColumnVisibilityChange,
         onSortingChange,
@@ -149,10 +148,6 @@ export function QueuesTable({
             columnVisibility,
         },
     });
-
-    if (!data) {
-        return <QueueTablesSkeleton />;
-    }
 
     return (
         <div className="w-full">
