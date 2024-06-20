@@ -1,7 +1,7 @@
 import axios, { Method } from "axios";
 import { z } from "zod";
 import { CONFIG, environmentNameSchema } from "@/config";
-import { pprint } from "@/lib/utils";
+import { assert, pprint } from "@/lib/utils";
 import { getCookie } from "./cookies";
 
 const queueSchema = z.object({
@@ -50,6 +50,8 @@ export async function queue(queueId: string) {
     const res = await request("GET", `queues/%2F/${queueId}`);
     const rabbitMqQueue = rabbitMqQueueSchema.parse(res);
     const queue = transformQueue(rabbitMqQueue);
+
+    assert(queue !== null);
 
     return queue;
 }

@@ -62,7 +62,7 @@ function Breadcrumbs() {
     const { ref, overflow } = useOverflowDetector();
 
     if (routeFragments.length < 2) {
-        return false;
+        return null;
     }
 
     const breadcrumbs = routeFragments.map((fragment, i) => ({

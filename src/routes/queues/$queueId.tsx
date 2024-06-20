@@ -1,5 +1,9 @@
 import Editor from "@monaco-editor/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+    useMutation,
+    useQueryClient,
+    useSuspenseQuery,
+} from "@tanstack/react-query";
 import {
     createFileRoute,
     useNavigate,
@@ -7,7 +11,7 @@ import {
 } from "@tanstack/react-router";
 import dedent from "dedent";
 import { Copy, OctagonX, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import ts from "typescript";
 import { useCopyToClipboard } from "usehooks-ts";
@@ -68,7 +72,8 @@ export const Route = createFileRoute("/queues/$queueId")({
 const computeCode = (code: string) => {
     try {
         // eslint-disable-next-line @typescript-eslint/no-implied-eval
-        const res: unknown = new Function(ts.transpile(code))();
+        const fn = new Function(ts.transpile(code));
+        const res = fn() as unknown;
         return typeof res === "string" ? res.trim() : null;
     } catch (e) {
         return null;
@@ -76,6 +81,14 @@ const computeCode = (code: string) => {
 };
 
 function Queue() {
+    return (
+        <Suspense fallback={<QueueSkeleton />}>
+            <QueueData />
+        </Suspense>
+    );
+}
+
+function QueueData() {
     const search = Route.useSearch();
     const navigate = useNavigate();
     const { appearance } = useTheme();
@@ -89,12 +102,12 @@ function Queue() {
         messages: ["messages", queueId],
     } as const;
 
-    const { data: queue, isFetching: queueFetching } = useQuery({
+    const { data: queue, isFetching: queueFetching } = useSuspenseQuery({
         queryKey: queryKeys.queue,
         queryFn: () => api.queue(queueId),
     });
 
-    const { data: messages, isFetching: messagesFetching } = useQuery({
+    const { data: messages, isFetching: messagesFetching } = useSuspenseQuery({
         queryKey: queryKeys.messages,
         queryFn: () => api.messages(queueId),
     });
@@ -129,10 +142,6 @@ function Queue() {
 
         return () => clearTimeout(debounce);
     }, [code, navigate]);
-
-    if (!queue || !messages) {
-        return <QueueSkeleton />;
-    }
 
     return (
         <div className="flex flex-col gap-y-8">
