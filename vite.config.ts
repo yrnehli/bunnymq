@@ -7,6 +7,14 @@ import tsconfigPaths from "vite-tsconfig-paths";
 // https://vitejs.dev/config/
 export default defineConfig({
     base: "/bunnymq/",
+    build: {
+        rollupOptions: {
+            input: {
+                "index": "./index.html",
+                "404": "./404.html",
+            },
+        },
+    },
     plugins: [
         react(),
         checker({
