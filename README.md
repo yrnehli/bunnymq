@@ -5,7 +5,7 @@
 ![ESLint Workflow](https://github.com/yrnehli/bunnymq/actions/workflows/eslint.yml/badge.svg)
 ![Prettier Workflow](https://github.com/yrnehli/bunnymq/actions/workflows/prettier.yml/badge.svg)
 
-A [modern web interface](https://github.com/yrnehli/bunnymq) to manage your RabbitMQ queues. Built using React, with a focus on type safety.
+A [modern web interface](https://yrnehli.github.io/bunnymq) to manage your RabbitMQ queues. Built using React, with a focus on type safety.
 
 <img width="945" alt="image" src="https://github.com/yrnehli/bunnymq/assets/44710606/68bc16c6-d2eb-4d07-9a6a-d223d8657752">
 
