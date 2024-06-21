@@ -39,9 +39,7 @@ export function login(credentials: string): Promise<unknown> {
 export async function queues() {
     const res = await request("GET", "queues");
     const rabbitMqQueues = rabbitMqQueuesSchema.parse(res);
-    const queues = rabbitMqQueues
-        .map(transformQueue)
-        .filter((q): q is Queue => Boolean(q));
+    const queues = rabbitMqQueues.map(transformQueue).filter((q) => q !== null);
 
     return queues;
 }
