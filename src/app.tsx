@@ -8,13 +8,15 @@ import ReactDOM from "react-dom/client";
 import "@/globals.css";
 import { routeTree } from "./routeTree.gen";
 
+export const BASEPATH = "/bunnymq";
+
 const router = createRouter({
     routeTree,
     defaultNotFoundComponent: () => {
         const navigate = useNavigate();
         navigate({ to: "/" });
     },
-    basepath: "/bunnymq",
+    basepath: BASEPATH,
 });
 
 declare module "@tanstack/react-router" {

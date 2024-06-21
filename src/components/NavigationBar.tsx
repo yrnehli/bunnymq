@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 import { useOverflowDetector } from "react-detectable-overflow";
+import { BASEPATH } from "@/app";
 import { Ping } from "@/components/Ping";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TooltipBasic } from "@/components/TooltipBasic";
@@ -61,14 +62,20 @@ function Breadcrumbs() {
         .map(decodeURIComponent);
     const { ref, overflow } = useOverflowDetector();
 
-    if (routeFragments.length < 2) {
+    const basepathFragments = (BASEPATH as string)
+        .split("/")
+        .filter((fragment) => fragment.length);
+
+    const breadcrumbs = routeFragments
+        .map((fragment, i) => ({
+            title: fragment,
+            path: "/" + routeFragments.slice(0, i + 1).join("/"),
+        }))
+        .filter((breadcrumb, i) => breadcrumb.title !== basepathFragments[i]);
+
+    if (breadcrumbs.length < 2) {
         return null;
     }
-
-    const breadcrumbs = routeFragments.map((fragment, i) => ({
-        title: fragment,
-        path: "/" + routeFragments.slice(0, i + 1).join("/"),
-    }));
 
     return (
         <Breadcrumb
