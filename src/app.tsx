@@ -14,6 +14,7 @@ const router = createRouter({
         const navigate = useNavigate();
         navigate({ to: "/" });
     },
+    basepath: "/bunnymq",
 });
 
 declare module "@tanstack/react-router" {
