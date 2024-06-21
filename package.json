@@ -39,7 +39,6 @@
         "sonner": "^1.4.41",
         "tailwind-merge": "^2.2.2",
         "tailwindcss-animate": "^1.0.7",
-        "typescript": "^5.4.3",
         "usehooks-ts": "^3.0.2",
         "zod": "^3.22.4"
     },
@@ -64,6 +63,7 @@
         "prettier": "^3.2.5",
         "prettier-plugin-tailwindcss": "^0.5.11",
         "tailwindcss": "^3.4.1",
+        "typescript": "^5.5.2",
         "vite": "^5.1.0",
         "vite-plugin-checker": "^0.6.4",
         "vite-tsconfig-paths": "^4.3.2"
