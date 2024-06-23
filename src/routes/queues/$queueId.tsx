@@ -83,12 +83,12 @@ const computeCode = (code: string) => {
 function Queue() {
     return (
         <Suspense fallback={<QueueSkeleton />}>
-            <QueueData />
+            <QueueControl />
         </Suspense>
     );
 }
 
-function QueueData() {
+function QueueControl() {
     const search = Route.useSearch();
     const navigate = useNavigate();
     const { appearance } = useTheme();
