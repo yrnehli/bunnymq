@@ -6,6 +6,15 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    build: {
+        rollupOptions: {
+            input: {
+                "index": "./index.html",
+                "icon-192": "./icon-192.png",
+                "icon-512": "./icon-512.png",
+            },
+        },
+    },
     plugins: [
         react(),
         checker({
