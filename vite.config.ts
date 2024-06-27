@@ -15,7 +15,6 @@ export default defineConfig({
         tsconfigPaths(),
         TanStackRouterVite(),
         VitePWA({
-            includeAssets: ["icon-192.png", "icon-512.png"],
             manifest: {
                 name: "BunnyMQ",
                 icons: [
