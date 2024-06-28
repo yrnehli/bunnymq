@@ -38,7 +38,7 @@ export default defineConfig({
                         sizes: "512x512",
                     },
                 ],
-                start_url: "/",
+                start_url: "/bunnymq",
                 display: "minimal-ui",
             },
         }),
