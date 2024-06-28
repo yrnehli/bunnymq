@@ -28,12 +28,12 @@ export default defineConfig({
                 name: "BunnyMQ",
                 icons: [
                     {
-                        src: "/icon-192.png",
+                        src: "/bunnymq/icon-192.png",
                         type: "image/png",
                         sizes: "192x192",
                     },
                     {
-                        src: "/icon-512.png",
+                        src: "/bunnymq/icon-512.png",
                         type: "image/png",
                         sizes: "512x512",
                     },
