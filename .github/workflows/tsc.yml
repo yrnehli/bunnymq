@@ -1,27 +1,27 @@
 name: TypeScript
 
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-    typescript:
-        runs-on: ubuntu-latest
-        steps:
-            - name: checkout
-              uses: actions/checkout@v4
-            - name: cache
-              uses: actions/cache@v4
-              with:
-                  path: ~/.npm
-                  key: ${{ runner.os }}-npm-${{ hashFiles('**/workflows/tsc.yml') }}
-                  restore-keys: |
-                      ${{ runner.os }}-npm-
-            - name: typescript
-              run: |-
-                  npm install
-                  npx tsc --noEmit
+  typescript:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/workflows/tsc.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: typescript
+        run: |-
+          npm install
+          npx tsc --noEmit
