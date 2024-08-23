@@ -3,7 +3,6 @@
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "typescript.tsdk": "node_modules/typescript/lib",
     "workbench.editor.customLabels.patterns": {
-        "*/src/routes/index.tsx": "/root",
         "*/src/routes/*/index.tsx": "../${dirname}",
         "*/src/routes/**/*": "../${dirname}/${filename}"
     }
