@@ -15,7 +15,7 @@ import { Route as LogoutImport } from './routes/logout'
 import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
 import { Route as QueuesIndexImport } from './routes/queues/index'
-import { Route as QueuesIdImport } from './routes/queues/$id'
+import { Route as QueuesIdIndexImport } from './routes/queues/$id/index'
 
 // Create/Update Routes
 
@@ -39,8 +39,8 @@ const QueuesIndexRoute = QueuesIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const QueuesIdRoute = QueuesIdImport.update({
-  path: '/queues/$id',
+const QueuesIdIndexRoute = QueuesIdIndexImport.update({
+  path: '/queues/$id/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,12 +60,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LogoutImport
       parentRoute: typeof rootRoute
     }
-    '/queues/$id': {
-      preLoaderRoute: typeof QueuesIdImport
-      parentRoute: typeof rootRoute
-    }
     '/queues/': {
       preLoaderRoute: typeof QueuesIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/queues/$id/': {
+      preLoaderRoute: typeof QueuesIdIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -77,8 +77,8 @@ export const routeTree = rootRoute.addChildren([
   IndexRoute,
   LoginRoute,
   LogoutRoute,
-  QueuesIdRoute,
   QueuesIndexRoute,
+  QueuesIdIndexRoute,
 ])
 
 /* prettier-ignore-end */

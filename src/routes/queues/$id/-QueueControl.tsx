@@ -16,9 +16,9 @@ import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import * as api from "@/lib/api";
 import { Route } from "@/routes/queues/$id";
-import { PurgeMessages } from "@/routes/queues/_PurgeMessages";
-import { QueueInfo } from "@/routes/queues/_QueueInfo";
-import { ViewMessages } from "@/routes/queues/_ViewMessages";
+import { PurgeMessages } from "@/routes/queues/$id/-PurgeMessages";
+import { QueueInfo } from "@/routes/queues/$id/-QueueInfo";
+import { ViewMessages } from "@/routes/queues/$id/-ViewMessages";
 
 const DEFAULT_CODE = dedent`
     const pprint = (obj: object) => JSON.stringify(obj, null, 4);
@@ -45,7 +45,7 @@ export function QueueControl() {
     const search = Route.useSearch();
     const navigate = useNavigate();
     const { appearance } = useTheme();
-    const { id: queueId } = useParams({ from: "/queues/$id" });
+    const { id: queueId } = useParams({ from: "/queues/$id/" });
     const [code, setCode] = useState(search.code ?? DEFAULT_CODE);
     const environment = api.getEnvironment();
     const queryClient = useQueryClient();
