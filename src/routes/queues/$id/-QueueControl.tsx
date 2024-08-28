@@ -36,7 +36,7 @@ const computeCode = (code: string) => {
         const fn = new Function(ts.transpile(code));
         const res = fn() as unknown;
         return typeof res === "string" ? res.trim() : null;
-    } catch (e) {
+    } catch (_) {
         return null;
     }
 };

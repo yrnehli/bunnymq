@@ -23,7 +23,7 @@ export function RefreshButton({
         >
             <RefreshCw
                 className="h-[1.2rem] w-[1.2rem] transition-transform duration-500"
-                style={{ transform: `rotate(${rotation}deg)` }}
+                style={{ transform: `rotate(${rotation.toString()}deg)` }}
             />
         </Button>
     );

@@ -129,12 +129,12 @@ function getBaseUrl() {
     return CONFIG.environments[environment];
 }
 
-async function request<T = unknown>(
+async function request(
     method: Method,
     endpoint: string,
     options: {
         credentials?: string;
-        data?: T;
+        data?: unknown;
     } = {},
 ) {
     const { credentials, data } = options;
@@ -146,7 +146,7 @@ async function request<T = unknown>(
         url: url,
         params: { ...(CONFIG.useProxy && { proxy: apiUrl }) },
         headers: {
-            "Authorization": `Basic ${credentials ?? getCookie("credentials")}`,
+            "Authorization": `Basic ${credentials ?? getCookie("credentials") ?? ""}`,
         },
         data: data,
     });

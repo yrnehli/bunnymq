@@ -11,7 +11,7 @@ export async function isAuthenticated() {
 
     try {
         await login(credentials);
-    } catch (e) {
+    } catch (_) {
         unauthenticate();
         return false;
     }
