@@ -1,12 +1,13 @@
+import React from "react";
 import { cn } from "@/lib/utils";
 
-export type PingProps = {
+export interface PingProps extends React.HTMLAttributes<HTMLSpanElement> {
     variant: "green" | "amber" | "red";
-};
+}
 
-export function Ping({ variant }: PingProps) {
+export function Ping({ variant, className, ...props }: PingProps) {
     return (
-        <span className="relative flex h-2 w-2">
+        <span className={cn("relative flex h-2 w-2", className)} {...props}>
             <span
                 className={cn(
                     "absolute inline-flex h-full w-full animate-ping rounded-full opacity-75",
