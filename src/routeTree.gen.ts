@@ -49,22 +49,37 @@ const QueuesIdIndexRoute = QueuesIdIndexImport.update({
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
     '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
     '/logout': {
+      id: '/logout'
+      path: '/logout'
+      fullPath: '/logout'
       preLoaderRoute: typeof LogoutImport
       parentRoute: typeof rootRoute
     }
     '/queues/': {
+      id: '/queues/'
+      path: '/queues'
+      fullPath: '/queues'
       preLoaderRoute: typeof QueuesIndexImport
       parentRoute: typeof rootRoute
     }
     '/queues/$id/': {
+      id: '/queues/$id/'
+      path: '/queues/$id'
+      fullPath: '/queues/$id'
       preLoaderRoute: typeof QueuesIdIndexImport
       parentRoute: typeof rootRoute
     }
@@ -73,12 +88,44 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([
+export const routeTree = rootRoute.addChildren({
   IndexRoute,
   LoginRoute,
   LogoutRoute,
   QueuesIndexRoute,
   QueuesIdIndexRoute,
-])
+})
 
 /* prettier-ignore-end */
+
+/* ROUTE_MANIFEST_START
+{
+  "routes": {
+    "__root__": {
+      "filePath": "__root.tsx",
+      "children": [
+        "/",
+        "/login",
+        "/logout",
+        "/queues/",
+        "/queues/$id/"
+      ]
+    },
+    "/": {
+      "filePath": "index.tsx"
+    },
+    "/login": {
+      "filePath": "login.tsx"
+    },
+    "/logout": {
+      "filePath": "logout.tsx"
+    },
+    "/queues/": {
+      "filePath": "queues/index.tsx"
+    },
+    "/queues/$id/": {
+      "filePath": "queues/$id/index.tsx"
+    }
+  }
+}
+ROUTE_MANIFEST_END */
