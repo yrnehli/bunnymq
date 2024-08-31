@@ -14,14 +14,16 @@ export function assert(
     message?: string,
 ): asserts condition {
     if (!condition) {
-        throw new Error(`Assertion failed${message && `: ${message}`}`);
+        throw new Error(
+            message ? `Assertion failed: ${message}` : "Assertion failed",
+        );
     }
 }
 
 export function pprint(s: string) {
     try {
         return JSON.stringify(JSON.parse(s), null, 4);
-    } catch (e) {
+    } catch (_) {
         return s;
     }
 }

@@ -14,6 +14,7 @@ import {
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -31,6 +32,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Queue, queues } from "@/lib/api";
+import { cn } from "@/lib/utils";
 
 function SortableHeader(props: {
     column: Column<Queue>;
@@ -88,7 +90,7 @@ const columns: ColumnDef<Queue>[] = [
     },
 ];
 
-export type QueuesTableProps = {
+export interface QueuesTableProps extends React.HTMLAttributes<HTMLDivElement> {
     queryKey: unknown[];
     searchTerm?: string;
     columnVisibility: VisibilityState;
@@ -99,7 +101,7 @@ export type QueuesTableProps = {
     ) => void;
     onSortingChange: (updateFn: Updater<SortingState, SortingState>) => void;
     onFetchingChange?: (isFetching: boolean) => void;
-};
+}
 
 export function QueuesTable({
     queryKey,
@@ -110,6 +112,8 @@ export function QueuesTable({
     onColumnVisibilityChange,
     onSortingChange,
     onFetchingChange,
+    className,
+    ...props
 }: QueuesTableProps) {
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
@@ -150,7 +154,7 @@ export function QueuesTable({
     });
 
     return (
-        <div className="w-full">
+        <div className={cn("w-full", className)} {...props}>
             <div className="grid grid-cols-2 gap-y-2 py-4">
                 <Input
                     placeholder="Filter queues..."
@@ -221,11 +225,14 @@ export function QueuesTable({
                                             className="p-0"
                                         >
                                             <Link
-                                                to="/queues/$queueId"
+                                                to="/queues/$id"
                                                 params={{
-                                                    queueId:
-                                                        row.getValue<string>(
-                                                            "name",
+                                                    id: z
+                                                        .string()
+                                                        .parse(
+                                                            row.getValue(
+                                                                "name",
+                                                            ),
                                                         ),
                                                 }}
                                             >
