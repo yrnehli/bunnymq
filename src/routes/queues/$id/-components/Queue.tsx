@@ -38,7 +38,7 @@ const computeCode = (code: string) => {
     }
 };
 
-export function QueueControl() {
+export function Queue() {
     const search = Route.useSearch();
     const navigate = useNavigate();
     const { appearance } = useTheme();

@@ -103,7 +103,7 @@ export interface QueuesTableProps extends React.HTMLAttributes<HTMLDivElement> {
     onSortingChange: (updateFn: Updater<SortingState, SortingState>) => void;
 }
 
-export function QueuesTable({
+export function Queues({
     searchTerm: initialSearchTerm = "",
     columnVisibility,
     sorting,

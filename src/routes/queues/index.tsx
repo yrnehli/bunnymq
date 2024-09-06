@@ -3,9 +3,9 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SortingState, VisibilityState } from "@tanstack/react-table";
 import { Suspense } from "react";
 import { z } from "zod";
-import { QueueTablesSkeleton } from "@/components/skeletons/QueuesTableSkeleton";
 import { checkAuthenticated } from "@/routes/__root";
-import { QueuesTable } from "@/routes/queues/-components/QueuesTable";
+import { Queues } from "@/routes/queues/-components/Queues";
+import { QueuesSkeleton } from "@/routes/queues/-components/QueuesSkeleton";
 
 type QueuesSearch = {
     sorting?: SortingState;
@@ -27,14 +27,14 @@ const queuesSearchSchema: z.ZodType<QueuesSearch> = z.object({
 });
 
 export const Route = createFileRoute("/queues/")({
-    component: Queues,
+    component: QueuesLoader,
     validateSearch: (search: Record<string, unknown>) => {
         return queuesSearchSchema.parse(search);
     },
     beforeLoad: async ({ location }) => await checkAuthenticated(location.href),
 });
 
-function Queues() {
+function QueuesLoader() {
     const search = Route.useSearch();
     const navigate = useNavigate();
 
@@ -81,8 +81,8 @@ function Queues() {
     };
 
     return (
-        <Suspense fallback={<QueueTablesSkeleton />}>
-            <QueuesTable
+        <Suspense fallback={<QueuesSkeleton />}>
+            <Queues
                 searchTerm={search.searchTerm}
                 columnVisibility={search.columnVisibility ?? {}}
                 onColumnVisibilityChange={onColumnVisibilityChange}
