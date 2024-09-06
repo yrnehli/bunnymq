@@ -1,4 +1,4 @@
-import { Updater, useSuspenseQuery } from "@tanstack/react-query";
+import { Updater } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import {
     Column,
@@ -13,8 +13,9 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
+import { RefreshButton } from "@/components/RefreshButton";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -31,7 +32,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Queue, queues } from "@/lib/api";
+import { Queue } from "@/lib/api";
+import { useQueues } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 function SortableHeader(props: {
@@ -91,7 +93,6 @@ const columns: ColumnDef<Queue>[] = [
 ];
 
 export interface QueuesTableProps extends React.HTMLAttributes<HTMLDivElement> {
-    queryKey: unknown[];
     searchTerm?: string;
     columnVisibility: VisibilityState;
     sorting: SortingState;
@@ -100,34 +101,23 @@ export interface QueuesTableProps extends React.HTMLAttributes<HTMLDivElement> {
         updateFn: Updater<VisibilityState, VisibilityState>,
     ) => void;
     onSortingChange: (updateFn: Updater<SortingState, SortingState>) => void;
-    onFetchingChange?: (isFetching: boolean) => void;
 }
 
 export function QueuesTable({
-    queryKey,
     searchTerm: initialSearchTerm = "",
     columnVisibility,
     sorting,
     onSearchTermChange,
     onColumnVisibilityChange,
     onSortingChange,
-    onFetchingChange,
     className,
     ...props
 }: QueuesTableProps) {
+    const { data, isFetching, invalidate } = useQueues();
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
         { id: "name", value: searchTerm },
     ]);
-
-    const { data, isFetching } = useSuspenseQuery({
-        queryKey,
-        queryFn: () => queues(),
-    });
-
-    useEffect(() => {
-        onFetchingChange && onFetchingChange(isFetching);
-    }, [isFetching, onFetchingChange]);
 
     useEffect(() => {
         const debounce = setTimeout(() => {
@@ -154,113 +144,125 @@ export function QueuesTable({
     });
 
     return (
-        <div className={cn("w-full", className)} {...props}>
-            <div className="grid grid-cols-2 gap-y-2 py-4">
-                <Input
-                    placeholder="Filter queues..."
-                    value={searchTerm}
-                    onChange={(event) => {
-                        setSearchTerm(event.target.value);
-                        table
-                            .getColumn("name")
-                            ?.setFilterValue(event.target.value);
-                    }}
-                    className="col-span-2 max-w-full sm:col-span-1 sm:max-w-sm"
+        <React.Fragment>
+            <div className="flex justify-between">
+                <h1 className="text-2xl font-bold">Queues 🧑‍💻</h1>
+                <RefreshButton
+                    onClick={() => invalidate()}
+                    disabled={isFetching}
                 />
-                <div className="col-span-2 flex justify-end sm:col-span-1">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button
-                                variant="outline"
-                                className="w-full sm:w-auto"
-                            >
-                                Columns <ChevronDown className="ml-2 h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            {table
-                                .getAllColumns()
-                                .filter((column) => column.getCanHide())
-                                .map((column) => {
-                                    return (
-                                        <DropdownMenuCheckboxItem
-                                            key={column.id}
-                                            className="capitalize"
-                                            checked={column.getIsVisible()}
-                                            onCheckedChange={(value) =>
-                                                column.toggleVisibility(!!value)
-                                            }
-                                        >
-                                            {column.id}
-                                        </DropdownMenuCheckboxItem>
-                                    );
-                                })}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
             </div>
-            <div className="rounded-md border">
-                <Table>
-                    <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => (
-                                    <TableHead key={header.id}>
-                                        {flexRender(
-                                            header.column.columnDef.header,
-                                            header.getContext(),
-                                        )}
-                                    </TableHead>
-                                ))}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell
-                                            key={cell.id}
-                                            className="p-0"
-                                        >
-                                            <Link
-                                                to="/queues/$id"
-                                                params={{
-                                                    id: z
-                                                        .string()
-                                                        .parse(
-                                                            row.getValue(
-                                                                "name",
-                                                            ),
-                                                        ),
-                                                }}
+            <div className={cn("w-full", className)} {...props}>
+                <div className="grid grid-cols-2 gap-y-2 py-4">
+                    <Input
+                        placeholder="Filter queues..."
+                        value={searchTerm}
+                        onChange={(event) => {
+                            setSearchTerm(event.target.value);
+                            table
+                                .getColumn("name")
+                                ?.setFilterValue(event.target.value);
+                        }}
+                        className="col-span-2 max-w-full sm:col-span-1 sm:max-w-sm"
+                    />
+                    <div className="col-span-2 flex justify-end sm:col-span-1">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    className="w-full sm:w-auto"
+                                >
+                                    Columns{" "}
+                                    <ChevronDown className="ml-2 h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                {table
+                                    .getAllColumns()
+                                    .filter((column) => column.getCanHide())
+                                    .map((column) => {
+                                        return (
+                                            <DropdownMenuCheckboxItem
+                                                key={column.id}
+                                                className="capitalize"
+                                                checked={column.getIsVisible()}
+                                                onCheckedChange={(value) =>
+                                                    column.toggleVisibility(
+                                                        !!value,
+                                                    )
+                                                }
                                             >
-                                                <div className="p-4">
-                                                    {flexRender(
-                                                        cell.column.columnDef
-                                                            .cell,
-                                                        cell.getContext(),
-                                                    )}
-                                                </div>
-                                            </Link>
-                                        </TableCell>
+                                                {column.id}
+                                            </DropdownMenuCheckboxItem>
+                                        );
+                                    })}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                </div>
+                <div className="rounded-md border">
+                    <Table>
+                        <TableHeader>
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id}>
+                                    {headerGroup.headers.map((header) => (
+                                        <TableHead key={header.id}>
+                                            {flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext(),
+                                            )}
+                                        </TableHead>
                                     ))}
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center text-xl font-medium"
-                                >
-                                    No results 🙅
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TableRow key={row.id}>
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell
+                                                key={cell.id}
+                                                className="p-0"
+                                            >
+                                                <Link
+                                                    to="/queues/$id"
+                                                    params={{
+                                                        id: z
+                                                            .string()
+                                                            .parse(
+                                                                row.getValue(
+                                                                    "name",
+                                                                ),
+                                                            ),
+                                                    }}
+                                                >
+                                                    <div className="p-4">
+                                                        {flexRender(
+                                                            cell.column
+                                                                .columnDef.cell,
+                                                            cell.getContext(),
+                                                        )}
+                                                    </div>
+                                                </Link>
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={columns.length}
+                                        className="h-24 text-center text-xl font-medium"
+                                    >
+                                        No results 🙅
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
             </div>
-        </div>
+        </React.Fragment>
     );
 }

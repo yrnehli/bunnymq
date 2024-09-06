@@ -1,12 +1,10 @@
-import { Updater, useQueryClient } from "@tanstack/react-query";
+import { Updater } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SortingState, VisibilityState } from "@tanstack/react-table";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import { z } from "zod";
 import { QueuesTable } from "@/components/QueuesTable";
-import { RefreshButton } from "@/components/RefreshButton";
 import { QueueTablesSkeleton } from "@/components/skeletons/QueuesTableSkeleton";
-import { getCookie } from "@/lib/cookies";
 import { checkAuthenticated } from "@/routes/__root";
 
 type QueuesSearch = {
@@ -39,10 +37,6 @@ export const Route = createFileRoute("/queues/")({
 function Queues() {
     const search = Route.useSearch();
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
-    const [fetching, setFetching] = useState(false);
-    const environment = getCookie("environment");
-    const queryKey = ["queues", environment];
 
     const onColumnVisibilityChange = (
         updateFn: Updater<VisibilityState, VisibilityState>,
@@ -87,26 +81,15 @@ function Queues() {
     };
 
     return (
-        <>
-            <div className="flex justify-between">
-                <h1 className="text-2xl font-bold">Queues 🧑‍💻</h1>
-                <RefreshButton
-                    onClick={() => queryClient.invalidateQueries({ queryKey })}
-                    disabled={fetching}
-                />
-            </div>
-            <Suspense fallback={<QueueTablesSkeleton />}>
-                <QueuesTable
-                    queryKey={queryKey}
-                    searchTerm={search.searchTerm}
-                    columnVisibility={search.columnVisibility ?? {}}
-                    onColumnVisibilityChange={onColumnVisibilityChange}
-                    sorting={search.sorting ?? []}
-                    onSortingChange={onSortingChange}
-                    onFetchingChange={(isFetching) => setFetching(isFetching)}
-                    onSearchTermChange={onSearchTermChange}
-                />
-            </Suspense>
-        </>
+        <Suspense fallback={<QueueTablesSkeleton />}>
+            <QueuesTable
+                searchTerm={search.searchTerm}
+                columnVisibility={search.columnVisibility ?? {}}
+                onColumnVisibilityChange={onColumnVisibilityChange}
+                sorting={search.sorting ?? []}
+                onSortingChange={onSortingChange}
+                onSearchTermChange={onSearchTermChange}
+            />
+        </Suspense>
     );
 }
