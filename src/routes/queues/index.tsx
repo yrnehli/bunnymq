@@ -3,9 +3,9 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SortingState, VisibilityState } from "@tanstack/react-table";
 import { Suspense } from "react";
 import { z } from "zod";
-import { QueuesTable } from "@/components/QueuesTable";
 import { QueueTablesSkeleton } from "@/components/skeletons/QueuesTableSkeleton";
 import { checkAuthenticated } from "@/routes/__root";
+import { QueuesTable } from "@/routes/queues/-components/QueuesTable";
 
 type QueuesSearch = {
     sorting?: SortingState;
