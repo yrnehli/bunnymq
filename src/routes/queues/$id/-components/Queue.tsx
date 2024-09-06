@@ -1,9 +1,5 @@
 import Editor from "@monaco-editor/react";
-import {
-    useMutation,
-    useQueryClient,
-    useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import dedent from "dedent";
 import { useEffect, useState } from "react";
@@ -15,10 +11,11 @@ import { SyntaxHighlighter } from "@/components/SyntaxHighlighter";
 import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import * as api from "@/lib/api";
+import { useQueue, useQueueMessages } from "@/lib/hooks";
 import { Route } from "@/routes/queues/$id";
-import { PurgeMessages } from "@/routes/queues/$id/-PurgeMessages";
-import { QueueInfo } from "@/routes/queues/$id/-QueueInfo";
-import { ViewMessages } from "@/routes/queues/$id/-ViewMessages";
+import { PurgeMessages } from "@/routes/queues/$id/-components/PurgeMessages";
+import { QueueInfo } from "@/routes/queues/$id/-components/QueueInfo";
+import { ViewMessages } from "@/routes/queues/$id/-components/ViewMessages";
 
 const DEFAULT_CODE = dedent`
     const pprint = (obj: object) => JSON.stringify(obj, null, 4);
@@ -41,37 +38,30 @@ const computeCode = (code: string) => {
     }
 };
 
-export function QueueControl() {
+export function Queue() {
     const search = Route.useSearch();
     const navigate = useNavigate();
     const { appearance } = useTheme();
     const { id: queueId } = useParams({ from: "/queues/$id/" });
     const [code, setCode] = useState(search.code ?? DEFAULT_CODE);
     const environment = api.getEnvironment();
-    const queryClient = useQueryClient();
     const output = computeCode(code);
-    const queryKeys = {
-        queue: ["queue", queueId],
-        messages: ["messages", queueId],
-    } as const;
 
-    const { data: queue, isFetching: queueFetching } = useSuspenseQuery({
-        queryKey: queryKeys.queue,
-        queryFn: () => api.queue(queueId),
-    });
+    const {
+        data: queue,
+        isFetching: queueFetching,
+        invalidate: invalidateQueue,
+    } = useQueue(queueId);
 
-    const { data: messages, isFetching: messagesFetching } = useSuspenseQuery({
-        queryKey: queryKeys.messages,
-        queryFn: () => api.messages(queueId),
-    });
+    const {
+        data: messages,
+        isFetching: messagesFetching,
+        invalidate: invalidateMessages,
+    } = useQueueMessages(queueId);
 
     const invalidateQueries = () => {
-        void queryClient.invalidateQueries({
-            queryKey: queryKeys.queue,
-        });
-        void queryClient.invalidateQueries({
-            queryKey: queryKeys.messages,
-        });
+        void invalidateQueue();
+        void invalidateMessages();
     };
 
     const publishMessage = useMutation({
