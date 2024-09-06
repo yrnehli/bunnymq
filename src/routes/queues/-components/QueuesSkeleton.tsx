@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function QueueTablesSkeleton() {
+export function QueuesSkeleton() {
     return (
         <div className="flex flex-col gap-y-2 py-4">
             <Skeleton className="mb-3 h-10 w-96" />
