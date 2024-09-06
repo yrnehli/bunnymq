@@ -1,8 +1,4 @@
-import {
-    RouterProvider,
-    createRouter,
-    useNavigate,
-} from "@tanstack/react-router";
+import { Navigate, RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "@/globals.css";
@@ -13,8 +9,7 @@ export const BASEPATH = "/bunnymq";
 const router = createRouter({
     routeTree,
     defaultNotFoundComponent: () => {
-        const navigate = useNavigate();
-        navigate({ to: "/" });
+        return <Navigate to="/" replace />;
     },
     basepath: BASEPATH,
 });
