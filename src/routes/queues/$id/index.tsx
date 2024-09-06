@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { z } from "zod";
 import { QueueSkeleton } from "@/components/skeletons/QueueSkeleton";
 import { checkAuthenticated } from "@/routes/__root";
-import { QueueControl } from "@/routes/queues/$id/-QueueControl";
+import { QueueControl } from "@/routes/queues/$id/-components/QueueControl";
 
 const queueSearchSchema = z.object({
     code: z.string().optional(),

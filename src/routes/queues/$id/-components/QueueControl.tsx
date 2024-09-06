@@ -16,9 +16,9 @@ import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import * as api from "@/lib/api";
 import { Route } from "@/routes/queues/$id";
-import { PurgeMessages } from "@/routes/queues/$id/-PurgeMessages";
-import { QueueInfo } from "@/routes/queues/$id/-QueueInfo";
-import { ViewMessages } from "@/routes/queues/$id/-ViewMessages";
+import { PurgeMessages } from "@/routes/queues/$id/-components/PurgeMessages";
+import { QueueInfo } from "@/routes/queues/$id/-components/QueueInfo";
+import { ViewMessages } from "@/routes/queues/$id/-components/ViewMessages";
 
 const DEFAULT_CODE = dedent`
     const pprint = (obj: object) => JSON.stringify(obj, null, 4);
