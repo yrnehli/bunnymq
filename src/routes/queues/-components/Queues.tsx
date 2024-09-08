@@ -33,7 +33,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Queue } from "@/lib/api";
-import { useQueues } from "@/lib/hooks";
+import { useQueues } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
 function SortableHeader(props: {
