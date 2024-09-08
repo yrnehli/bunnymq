@@ -11,7 +11,7 @@ import { SyntaxHighlighter } from "@/components/SyntaxHighlighter";
 import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import * as api from "@/lib/api";
-import { useQueue, useQueueMessages } from "@/lib/hooks";
+import { useQueue, useQueueMessages } from "@/lib/queries";
 import { Route } from "@/routes/queues/$id";
 import { PurgeMessages } from "@/routes/queues/$id/-components/PurgeMessages";
 import { QueueInfo } from "@/routes/queues/$id/-components/QueueInfo";

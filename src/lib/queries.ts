@@ -6,13 +6,12 @@ import {
 } from "@tanstack/react-query";
 import { messages, queue, queues } from "@/lib/api";
 
-function useSuspenseQueryWithInvalidator<
+function useResource<
     T = unknown,
     TQueryKey extends QueryKey = QueryKey,
     TPageParam = never,
 >(queryKey: TQueryKey, queryFn: QueryFunction<T, TQueryKey, TPageParam>) {
     const queryClient = useQueryClient();
-
     const query = useSuspenseQuery({
         queryKey,
         queryFn,
@@ -30,15 +29,13 @@ function useSuspenseQueryWithInvalidator<
 }
 
 export function useQueues() {
-    return useSuspenseQueryWithInvalidator(["queue"], () => queues());
+    return useResource(["queue"], () => queues());
 }
 
 export function useQueue(id: string) {
-    return useSuspenseQueryWithInvalidator(["queue", id], () => queue(id));
+    return useResource(["queue", id], () => queue(id));
 }
 
 export function useQueueMessages(queueId: string) {
-    return useSuspenseQueryWithInvalidator(["messages", queueId], () =>
-        messages(queueId),
-    );
+    return useResource(["messages", queueId], () => messages(queueId));
 }
