@@ -24,4 +24,4 @@ jobs:
       - name: typescript
         run: |-
           npm install
-          npx tsc --noEmit
+          npm run typecheck
