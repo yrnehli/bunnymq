@@ -1,11 +1,11 @@
 repos:
-    - repo: local
-      hooks:
-          - id: prettier
-            name: Prettier
-            language: system
-            files: src
-            types: [file]
-            entry: ./prettier-pre-commit.sh
-            pass_filenames: true
-            always_run: false
+  - repo: local
+    hooks:
+      - id: prettier
+        name: Prettier
+        language: system
+        files: src
+        types: [file]
+        entry: ./prettier-pre-commit.sh
+        pass_filenames: true
+        always_run: false
