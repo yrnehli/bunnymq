@@ -3,9 +3,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SortingState, VisibilityState } from "@tanstack/react-table";
 import { Suspense } from "react";
 import { z } from "zod";
-import { checkAuthenticated } from "@/routes/__root";
-import { Queues } from "@/routes/queues/-components/Queues";
-import { QueuesSkeleton } from "@/routes/queues/-components/QueuesSkeleton";
+import { Queues } from "@/routes/_authenticated/queues/-components/Queues";
+import { QueuesSkeleton } from "@/routes/_authenticated/queues/-components/QueuesSkeleton";
 
 type QueuesSearch = {
     sorting?: SortingState;
@@ -26,12 +25,11 @@ const queuesSearchSchema: z.ZodType<QueuesSearch> = z.object({
     searchTerm: z.string().optional(),
 });
 
-export const Route = createFileRoute("/queues/")({
+export const Route = createFileRoute("/_authenticated/queues/")({
     component: QueuesLoader,
     validateSearch: (search: Record<string, unknown>) => {
         return queuesSearchSchema.parse(search);
     },
-    beforeLoad: async ({ location }) => await checkAuthenticated(location.href),
 });
 
 function QueuesLoader() {
