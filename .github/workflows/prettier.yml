@@ -24,4 +24,4 @@ jobs:
       - name: prettier
         run: |-
           npm install
-          npx prettier src --ignore-unknown --list-different
+          npx prettier . --ignore-unknown --list-different

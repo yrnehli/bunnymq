@@ -6,10 +6,11 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
-        "eslint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "proxy": "nodemon -w src/proxy.cjs -x 'node src/proxy.cjs || touch src/proxy.cjs'",
         "preview": "vite preview",
-        "prettier": "npx prettier src --write --ignore-unknown --list-different"
+        "format": "prettier . --write --ignore-unknown --list-different",
+        "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "typecheck": "tsc --noEmit"
     },
     "dependencies": {
         "@hookform/resolvers": "^3.3.4",
