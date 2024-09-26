@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 export function NavigationBar() {
     const credentials = getCookie("credentials");
     const environment = getCookie("environment");
-    const loggedIn = (credentials?.length ?? 0) > 0;
+    const loggedIn = credentials !== null;
 
     return (
         <nav className="flex items-center justify-between border-b p-2">

@@ -12,10 +12,10 @@ import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import * as api from "@/lib/api";
 import { useQueue, useQueueMessages } from "@/lib/queries";
-import { Route } from "@/routes/queues/$id";
-import { PurgeMessages } from "@/routes/queues/$id/-components/PurgeMessages";
-import { QueueInfo } from "@/routes/queues/$id/-components/QueueInfo";
-import { ViewMessages } from "@/routes/queues/$id/-components/ViewMessages";
+import { Route } from "@/routes/_authenticated/queues/$id";
+import { PurgeMessages } from "@/routes/_authenticated/queues/$id/-components/PurgeMessages";
+import { QueueInfo } from "@/routes/_authenticated/queues/$id/-components/QueueInfo";
+import { ViewMessages } from "@/routes/_authenticated/queues/$id/-components/ViewMessages";
 
 const DEFAULT_CODE = dedent`
     const pprint = (obj: object) => JSON.stringify(obj, null, 4);
@@ -42,7 +42,7 @@ export function Queue() {
     const search = Route.useSearch();
     const navigate = useNavigate();
     const { appearance } = useTheme();
-    const { id: queueId } = useParams({ from: "/queues/$id/" });
+    const { id: queueId } = useParams({ from: "/_authenticated/queues/$id/" });
     const [code, setCode] = useState(search.code ?? DEFAULT_CODE);
     const environment = api.getEnvironment();
     const output = computeCode(code);

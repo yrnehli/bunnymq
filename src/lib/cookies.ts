@@ -11,8 +11,8 @@ export function getCookie(name: string) {
     for (const cookie of document.cookie.split("; ")) {
         const [cookieName, cookieValue] = cookie.split("=");
 
-        if (cookieName === name && cookieValue !== undefined) {
-            return decodeURIComponent(cookieValue);
+        if (cookieName === name) {
+            return cookieValue?.length ? decodeURIComponent(cookieValue) : null;
         }
     }
 
