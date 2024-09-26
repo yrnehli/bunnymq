@@ -4,7 +4,7 @@ import { deleteCookie, getCookie } from "./cookies";
 export async function isAuthenticated() {
     const credentials = getCookie("credentials");
 
-    if (credentials === null || !credentials.length) {
+    if (credentials === null) {
         unauthenticate();
         return false;
     }

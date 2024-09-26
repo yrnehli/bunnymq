@@ -11,77 +11,92 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as LogoutImport } from './routes/logout'
-import { Route as LoginImport } from './routes/login'
-import { Route as IndexImport } from './routes/index'
-import { Route as QueuesIndexImport } from './routes/queues/index'
-import { Route as QueuesIdIndexImport } from './routes/queues/$id/index'
+import { Route as AuthenticatedImport } from './routes/_authenticated'
+import { Route as UnauthenticatedIndexImport } from './routes/_unauthenticated/index'
+import { Route as UnauthenticatedLogoutImport } from './routes/_unauthenticated/logout'
+import { Route as UnauthenticatedLoginImport } from './routes/_unauthenticated/login'
+import { Route as AuthenticatedQueuesIndexImport } from './routes/_authenticated/queues/index'
+import { Route as AuthenticatedQueuesIdIndexImport } from './routes/_authenticated/queues/$id/index'
 
 // Create/Update Routes
 
-const LogoutRoute = LogoutImport.update({
-  path: '/logout',
+const AuthenticatedRoute = AuthenticatedImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRoute,
 } as any)
 
-const LoginRoute = LoginImport.update({
-  path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const IndexRoute = IndexImport.update({
+const UnauthenticatedIndexRoute = UnauthenticatedIndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const QueuesIndexRoute = QueuesIndexImport.update({
-  path: '/queues/',
+const UnauthenticatedLogoutRoute = UnauthenticatedLogoutImport.update({
+  path: '/logout',
   getParentRoute: () => rootRoute,
 } as any)
 
-const QueuesIdIndexRoute = QueuesIdIndexImport.update({
-  path: '/queues/$id/',
+const UnauthenticatedLoginRoute = UnauthenticatedLoginImport.update({
+  path: '/login',
   getParentRoute: () => rootRoute,
 } as any)
+
+const AuthenticatedQueuesIndexRoute = AuthenticatedQueuesIndexImport.update({
+  path: '/queues/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
+const AuthenticatedQueuesIdIndexRoute = AuthenticatedQueuesIdIndexImport.update(
+  {
+    path: '/queues/$id/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
-    '/login': {
-      id: '/login'
+    '/_unauthenticated/login': {
+      id: '/_unauthenticated/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
+      preLoaderRoute: typeof UnauthenticatedLoginImport
       parentRoute: typeof rootRoute
     }
-    '/logout': {
-      id: '/logout'
+    '/_unauthenticated/logout': {
+      id: '/_unauthenticated/logout'
       path: '/logout'
       fullPath: '/logout'
-      preLoaderRoute: typeof LogoutImport
+      preLoaderRoute: typeof UnauthenticatedLogoutImport
       parentRoute: typeof rootRoute
     }
-    '/queues/': {
-      id: '/queues/'
+    '/_unauthenticated/': {
+      id: '/_unauthenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof UnauthenticatedIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authenticated/queues/': {
+      id: '/_authenticated/queues/'
       path: '/queues'
       fullPath: '/queues'
-      preLoaderRoute: typeof QueuesIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedQueuesIndexImport
+      parentRoute: typeof AuthenticatedImport
     }
-    '/queues/$id/': {
-      id: '/queues/$id/'
+    '/_authenticated/queues/$id/': {
+      id: '/_authenticated/queues/$id/'
       path: '/queues/$id'
       fullPath: '/queues/$id'
-      preLoaderRoute: typeof QueuesIdIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthenticatedQueuesIdIndexImport
+      parentRoute: typeof AuthenticatedImport
     }
   }
 }
@@ -89,11 +104,13 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  IndexRoute,
-  LoginRoute,
-  LogoutRoute,
-  QueuesIndexRoute,
-  QueuesIdIndexRoute,
+  AuthenticatedRoute: AuthenticatedRoute.addChildren({
+    AuthenticatedQueuesIndexRoute,
+    AuthenticatedQueuesIdIndexRoute,
+  }),
+  UnauthenticatedLoginRoute,
+  UnauthenticatedLogoutRoute,
+  UnauthenticatedIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -104,27 +121,35 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/login",
-        "/logout",
-        "/queues/",
-        "/queues/$id/"
+        "/_authenticated",
+        "/_unauthenticated/login",
+        "/_unauthenticated/logout",
+        "/_unauthenticated/"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/_authenticated": {
+      "filePath": "_authenticated.tsx",
+      "children": [
+        "/_authenticated/queues/",
+        "/_authenticated/queues/$id/"
+      ]
     },
-    "/login": {
-      "filePath": "login.tsx"
+    "/_unauthenticated/login": {
+      "filePath": "_unauthenticated/login.tsx"
     },
-    "/logout": {
-      "filePath": "logout.tsx"
+    "/_unauthenticated/logout": {
+      "filePath": "_unauthenticated/logout.tsx"
     },
-    "/queues/": {
-      "filePath": "queues/index.tsx"
+    "/_unauthenticated/": {
+      "filePath": "_unauthenticated/index.tsx"
     },
-    "/queues/$id/": {
-      "filePath": "queues/$id/index.tsx"
+    "/_authenticated/queues/": {
+      "filePath": "_authenticated/queues/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/queues/$id/": {
+      "filePath": "_authenticated/queues/$id/index.tsx",
+      "parent": "/_authenticated"
     }
   }
 }

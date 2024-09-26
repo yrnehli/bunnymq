@@ -31,7 +31,7 @@ const loginSearchSchema = z.object({
     next: z.string().optional(),
 });
 
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute("/_unauthenticated/login")({
     component: Login,
     validateSearch: (search: Record<string, unknown>) => {
         return loginSearchSchema.parse(search);
