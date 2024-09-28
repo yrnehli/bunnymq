@@ -113,7 +113,7 @@ export function Queues({
     className,
     ...props
 }: QueuesTableProps) {
-    const { data, isFetching, invalidate } = useQueues();
+    const { data, isFetching, invalidateQuery } = useQueues();
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
         { id: "name", value: searchTerm },
@@ -148,7 +148,7 @@ export function Queues({
             <div className="flex justify-between">
                 <h1 className="text-2xl font-bold">Queues 🧑‍💻</h1>
                 <RefreshButton
-                    onClick={() => invalidate()}
+                    onClick={() => invalidateQuery()}
                     disabled={isFetching}
                 />
             </div>
