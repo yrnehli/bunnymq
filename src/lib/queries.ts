@@ -1,26 +1,27 @@
 import {
-    QueryFunction,
+    DefaultError,
     QueryKey,
     useQueryClient,
     useSuspenseQuery,
+    UseSuspenseQueryOptions,
 } from "@tanstack/react-query";
 import { messages, queue, queues } from "@/lib/api";
 
 function useResource<
-    T = unknown,
+    TQueryFnData = unknown,
+    TError = DefaultError,
+    TData = TQueryFnData,
     TQueryKey extends QueryKey = QueryKey,
-    TPageParam = never,
->(queryKey: TQueryKey, queryFn: QueryFunction<T, TQueryKey, TPageParam>) {
+>(options: UseSuspenseQueryOptions<TQueryFnData, TError, TData, TQueryKey>) {
     const queryClient = useQueryClient();
-    const query = useSuspenseQuery({
-        queryKey,
-        queryFn,
-    });
+    const query = useSuspenseQuery(options);
+    const { queryKey } = options;
 
     return {
         ...query,
         queryKey,
-        invalidate: () => {
+        resetQuery: () => queryClient.resetQueries({ queryKey }),
+        invalidateQuery: () => {
             return queryClient.invalidateQueries({
                 queryKey,
             });
@@ -29,13 +30,22 @@ function useResource<
 }
 
 export function useQueues() {
-    return useResource(["queue"], () => queues());
+    return useResource({
+        queryKey: ["queue"],
+        queryFn: () => queues(),
+    });
 }
 
 export function useQueue(id: string) {
-    return useResource(["queue", id], () => queue(id));
+    return useResource({
+        queryKey: ["queue", id],
+        queryFn: () => queue(id),
+    });
 }
 
 export function useQueueMessages(queueId: string) {
-    return useResource(["messages", queueId], () => messages(queueId));
+    return useResource({
+        queryKey: ["messages", queueId],
+        queryFn: () => messages(queueId),
+    });
 }
