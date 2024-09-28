@@ -50,13 +50,13 @@ export function Queue() {
     const {
         data: queue,
         isFetching: queueFetching,
-        invalidate: invalidateQueue,
+        invalidateQuery: invalidateQueue,
     } = useQueue(queueId);
 
     const {
         data: messages,
         isFetching: messagesFetching,
-        invalidate: invalidateMessages,
+        invalidateQuery: invalidateMessages,
     } = useQueueMessages(queueId);
 
     const invalidateQueries = () => {
