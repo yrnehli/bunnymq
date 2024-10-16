@@ -41,8 +41,6 @@ export async function queues() {
         .filter((q) => q.durable);
     const queues = z.array(queueSchema).parse(durableQueues);
 
-    console.log({ queues });
-
     return queues;
 }
 
