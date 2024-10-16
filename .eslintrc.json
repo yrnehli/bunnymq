@@ -40,6 +40,7 @@
                 "caughtErrorsIgnorePattern": "^_"
             }
         ],
+        "no-console": "warn",
         "prefer-const": "error",
         "curly": "error",
         "eqeqeq": "error"
