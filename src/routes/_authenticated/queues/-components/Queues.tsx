@@ -124,7 +124,9 @@ export function Queues({
             onSearchTermChange && onSearchTermChange(searchTerm);
         }, 300);
 
-        return () => clearTimeout(debounce);
+        return () => {
+            clearTimeout(debounce);
+        };
     }, [onSearchTermChange, searchTerm]);
 
     const table = useReactTable({

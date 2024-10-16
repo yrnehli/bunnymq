@@ -1,60 +1,65 @@
 import axios, { Method } from "axios";
 import { z } from "zod";
 import { CONFIG, environmentNameSchema } from "@/config";
-import { assert, pprint } from "@/lib/utils";
+import { pprint } from "@/lib/utils";
 import { getCookie } from "./cookies";
 
-const queueSchema = z.object({
-    name: z.string(),
-    consumers: z.number(),
-    ready: z.number(),
-    unacked: z.number(),
-    total: z.number(),
-});
+const queueSchema = z
+    .object({
+        name: z.string(),
+        consumers: z.number(),
+        messages: z.number(),
+        messages_ready: z.number(),
+        messages_unacknowledged: z.number(),
+    })
+    .transform(
+        ({ messages, messages_ready, messages_unacknowledged, ...rest }) => ({
+            ...rest,
+            ready: messages_ready,
+            unacked: messages_unacknowledged,
+            total: messages,
+        }),
+    );
+
 export type Queue = z.infer<typeof queueSchema>;
 
-const rabbitMqQueueSchema = z.object({
-    name: z.string(),
-    durable: z.boolean(),
-    consumers: z.number().optional(),
-    messages: z.number().optional(),
-    messages_ready: z.number().optional(),
-    messages_unacknowledged: z.number().optional(),
-});
-
-const rabbitMqQueuesSchema = z.array(rabbitMqQueueSchema);
-type RabbitMqQueue = z.infer<typeof rabbitMqQueueSchema>;
-
-const rabbitMqMessagesSchema = z.array(
-    z.object({
-        payload: z.string(),
-    }),
-);
-type RabbitMqMessages = z.infer<typeof rabbitMqMessagesSchema>;
-
-export function login(credentials: string): Promise<unknown> {
+export function login(credentials: string) {
     return request("GET", "whoami", { credentials });
 }
 
 export async function queues() {
+    const queueDurabilitySchema = z
+        .object({
+            durable: z.boolean(),
+        })
+        .passthrough();
+
     const res = await request("GET", "queues");
-    const rabbitMqQueues = rabbitMqQueuesSchema.parse(res);
-    const queues = rabbitMqQueues.map(transformQueue).filter((q) => q !== null);
+    const durableQueues = z
+        .array(queueDurabilitySchema)
+        .parse(res)
+        .filter((q) => q.durable);
+    const queues = z.array(queueSchema).parse(durableQueues);
+
+    console.log({ queues });
 
     return queues;
 }
 
 export async function queue(queueId: string) {
     const res = await request("GET", `queues/%2F/${queueId}`);
-    const rabbitMqQueue = rabbitMqQueueSchema.parse(res);
-    const queue = transformQueue(rabbitMqQueue);
-
-    assert(queue !== null);
+    const queue = queueSchema.parse(res);
 
     return queue;
 }
 
 export async function messages(queueId: string) {
+    const messageSchema = z
+        .object({
+            payload: z.string(),
+        })
+        .transform((message) => pprint(message.payload));
+
     const res = await request("POST", `queues/%2F/${queueId}/get`, {
         data: {
             vhost: "/",
@@ -65,8 +70,7 @@ export async function messages(queueId: string) {
             count: "10",
         },
     });
-    const rabbitMqMessages = rabbitMqMessagesSchema.parse(res);
-    const messages = transformMessages(rabbitMqMessages);
+    const messages = z.array(messageSchema).parse(res);
 
     return messages;
 }
@@ -104,26 +108,6 @@ export function getEnvironment() {
     return environmentNameSchema.parse(getCookie("environment"));
 }
 
-function transformQueue(rabbitMqQueue: RabbitMqQueue): Queue | null {
-    if (!rabbitMqQueue.durable) {
-        return null;
-    }
-
-    const validation = queueSchema.safeParse({
-        name: rabbitMqQueue.name,
-        consumers: rabbitMqQueue.consumers,
-        ready: rabbitMqQueue.messages_ready,
-        unacked: rabbitMqQueue.messages_unacknowledged,
-        total: rabbitMqQueue.messages,
-    });
-
-    return validation.success ? validation.data : null;
-}
-
-function transformMessages(rabbitMqMessages: RabbitMqMessages) {
-    return rabbitMqMessages.map((message) => message.payload).map(pprint);
-}
-
 function getBaseUrl() {
     const environment = getEnvironment();
     return CONFIG.environments[environment];
@@ -141,7 +125,7 @@ async function request(
     const apiUrl = `${getBaseUrl()}/api/${endpoint}`;
     const url = CONFIG.useProxy ? "http://localhost:5174" : apiUrl;
 
-    const res = await axios.request({
+    const res = await axios.request<unknown>({
         method: method,
         url: url,
         params: { ...(CONFIG.useProxy && { proxy: apiUrl }) },
@@ -151,5 +135,5 @@ async function request(
         data: data,
     });
 
-    return res.data as unknown;
+    return res.data;
 }
