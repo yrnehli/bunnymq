@@ -15,6 +15,7 @@ export const Route = createRootRoute({
             <ThemeProvider>
                 <CatchBoundary
                     getResetKey={() => "reset"}
+                    // eslint-disable-next-line no-console
                     onCatch={(error) => console.error(error)}
                     errorComponent={ErrorPage}
                 >
