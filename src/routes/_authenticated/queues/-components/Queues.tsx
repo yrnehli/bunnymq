@@ -4,6 +4,7 @@ import {
     Column,
     ColumnDef,
     ColumnFiltersState,
+    Table as ReactTable,
     SortingState,
     VisibilityState,
     flexRender,
@@ -92,7 +93,7 @@ const columns: ColumnDef<Queue>[] = [
     },
 ];
 
-export interface QueuesTableProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface Queues extends React.HTMLAttributes<HTMLDivElement> {
     searchTerm?: string;
     columnVisibility: VisibilityState;
     sorting: SortingState;
@@ -112,7 +113,7 @@ export function Queues({
     onSortingChange,
     className,
     ...props
-}: QueuesTableProps) {
+}: Queues) {
     const { data, isFetching, invalidateQuery } = useQueues();
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
@@ -203,68 +204,68 @@ export function Queues({
                     </div>
                 </div>
                 <div className="rounded-md border">
-                    <Table>
-                        <TableHeader>
-                            {table.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => (
-                                        <TableHead key={header.id}>
-                                            {flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext(),
-                                            )}
-                                        </TableHead>
-                                    ))}
-                                </TableRow>
-                            ))}
-                        </TableHeader>
-                        <TableBody>
-                            {table.getRowModel().rows.length ? (
-                                table.getRowModel().rows.map((row) => (
-                                    <TableRow key={row.id}>
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell
-                                                key={cell.id}
-                                                className="p-0"
-                                            >
-                                                <Link
-                                                    to="/queues/$id"
-                                                    params={{
-                                                        id: z
-                                                            .string()
-                                                            .parse(
-                                                                row.getValue(
-                                                                    "name",
-                                                                ),
-                                                            ),
-                                                    }}
-                                                >
-                                                    <div className="p-4">
-                                                        {flexRender(
-                                                            cell.column
-                                                                .columnDef.cell,
-                                                            cell.getContext(),
-                                                        )}
-                                                    </div>
-                                                </Link>
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell
-                                        colSpan={columns.length}
-                                        className="h-24 text-center text-xl font-medium"
-                                    >
-                                        No results 🙅
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                    <QueuesTable table={table} />
                 </div>
             </div>
         </React.Fragment>
+    );
+}
+
+function QueuesTable(props: { table: ReactTable<Queue> }) {
+    const { table } = props;
+
+    return (
+        <Table>
+            <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => (
+                            <TableHead key={header.id}>
+                                {flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext(),
+                                )}
+                            </TableHead>
+                        ))}
+                    </TableRow>
+                ))}
+            </TableHeader>
+            <TableBody>
+                {table.getRowModel().rows.length ? (
+                    table.getRowModel().rows.map((row) => (
+                        <TableRow key={row.id}>
+                            {row.getVisibleCells().map((cell) => (
+                                <TableCell key={cell.id} className="p-0">
+                                    <Link
+                                        to="/queues/$id"
+                                        params={{
+                                            id: z
+                                                .string()
+                                                .parse(row.getValue("name")),
+                                        }}
+                                    >
+                                        <div className="p-4">
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext(),
+                                            )}
+                                        </div>
+                                    </Link>
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    ))
+                ) : (
+                    <TableRow>
+                        <TableCell
+                            colSpan={columns.length}
+                            className="h-24 text-center text-xl font-medium"
+                        >
+                            No results 🙅
+                        </TableCell>
+                    </TableRow>
+                )}
+            </TableBody>
+        </Table>
     );
 }
