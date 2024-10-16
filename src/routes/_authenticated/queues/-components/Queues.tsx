@@ -231,31 +231,30 @@ function QueuesTable(props: { table: ReactTable<Queue> }) {
                 ))}
             </TableHeader>
             <TableBody>
-                {table.getRowModel().rows.length ? (
-                    table.getRowModel().rows.map((row) => (
-                        <TableRow key={row.id}>
-                            {row.getVisibleCells().map((cell) => (
-                                <TableCell key={cell.id} className="p-0">
-                                    <Link
-                                        to="/queues/$id"
-                                        params={{
-                                            id: z
-                                                .string()
-                                                .parse(row.getValue("name")),
-                                        }}
-                                    >
-                                        <div className="p-4">
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext(),
-                                            )}
-                                        </div>
-                                    </Link>
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    ))
-                ) : (
+                {table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id}>
+                        {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id} className="p-0">
+                                <Link
+                                    to="/queues/$id"
+                                    params={{
+                                        id: z
+                                            .string()
+                                            .parse(row.getValue("name")),
+                                    }}
+                                >
+                                    <div className="p-4">
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext(),
+                                        )}
+                                    </div>
+                                </Link>
+                            </TableCell>
+                        ))}
+                    </TableRow>
+                ))}
+                {!table.getRowModel().rows.length && (
                     <TableRow>
                         <TableCell
                             colSpan={columns.length}
