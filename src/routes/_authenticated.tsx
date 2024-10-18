@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import React from "react";
+import { Layout } from "@/components/Layout";
 import { NavigationBar } from "@/components/NavigationBar";
 import { environmentNameSchema } from "@/config";
 import { isAuthenticated } from "@/lib/auth";
@@ -27,9 +28,9 @@ function Authenticated() {
                 loggedIn={true}
                 environment={environmentNameSchema.parse(environment)}
             />
-            <main className="mx-8 my-8 pb-24 md:mx-16 lg:mx-32 xl:mx-48 2xl:mx-64">
+            <Layout>
                 <Outlet />
-            </main>
+            </Layout>
         </React.Fragment>
     );
 }
