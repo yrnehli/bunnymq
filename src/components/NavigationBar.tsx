@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
+import React from "react";
 import { useOverflowDetector } from "react-detectable-overflow";
 import { Ping } from "@/components/Ping";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -13,16 +14,25 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { getCookie } from "@/lib/cookies";
+import { EnvironmentName } from "@/config";
 import { cn } from "@/lib/utils";
 
-export function NavigationBar() {
-    const credentials = getCookie("credentials");
-    const environment = getCookie("environment");
-    const loggedIn = credentials !== null;
+export interface NavigationBarProps
+    extends React.ComponentPropsWithoutRef<"nav"> {
+    loggedIn: boolean;
+    environment?: EnvironmentName;
+}
 
+export function NavigationBar({
+    loggedIn,
+    environment,
+    ...props
+}: NavigationBarProps) {
     return (
-        <nav className="flex items-center justify-between border-b p-2">
+        <nav
+            className="flex items-center justify-between border-b p-2"
+            {...props}
+        >
             <div className="flex flex-row items-center gap-x-5">
                 <div className="ms-3 select-none text-nowrap">BunnyMQ 🐇</div>
                 <Breadcrumbs />

@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as UnauthenticatedImport } from './routes/_unauthenticated'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as UnauthenticatedIndexImport } from './routes/_unauthenticated/index'
 import { Route as UnauthenticatedLogoutImport } from './routes/_unauthenticated/logout'
@@ -20,6 +21,11 @@ import { Route as AuthenticatedQueuesIdIndexImport } from './routes/_authenticat
 
 // Create/Update Routes
 
+const UnauthenticatedRoute = UnauthenticatedImport.update({
+  id: '/_unauthenticated',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AuthenticatedRoute = AuthenticatedImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRoute,
@@ -27,17 +33,17 @@ const AuthenticatedRoute = AuthenticatedImport.update({
 
 const UnauthenticatedIndexRoute = UnauthenticatedIndexImport.update({
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => UnauthenticatedRoute,
 } as any)
 
 const UnauthenticatedLogoutRoute = UnauthenticatedLogoutImport.update({
   path: '/logout',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => UnauthenticatedRoute,
 } as any)
 
 const UnauthenticatedLoginRoute = UnauthenticatedLoginImport.update({
   path: '/login',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => UnauthenticatedRoute,
 } as any)
 
 const AuthenticatedQueuesIndexRoute = AuthenticatedQueuesIndexImport.update({
@@ -63,26 +69,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedImport
       parentRoute: typeof rootRoute
     }
+    '/_unauthenticated': {
+      id: '/_unauthenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof UnauthenticatedImport
+      parentRoute: typeof rootRoute
+    }
     '/_unauthenticated/login': {
       id: '/_unauthenticated/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof UnauthenticatedLoginImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof UnauthenticatedImport
     }
     '/_unauthenticated/logout': {
       id: '/_unauthenticated/logout'
       path: '/logout'
       fullPath: '/logout'
       preLoaderRoute: typeof UnauthenticatedLogoutImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof UnauthenticatedImport
     }
     '/_unauthenticated/': {
       id: '/_unauthenticated/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof UnauthenticatedIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof UnauthenticatedImport
     }
     '/_authenticated/queues/': {
       id: '/_authenticated/queues/'
@@ -108,9 +121,11 @@ export const routeTree = rootRoute.addChildren({
     AuthenticatedQueuesIndexRoute,
     AuthenticatedQueuesIdIndexRoute,
   }),
-  UnauthenticatedLoginRoute,
-  UnauthenticatedLogoutRoute,
-  UnauthenticatedIndexRoute,
+  UnauthenticatedRoute: UnauthenticatedRoute.addChildren({
+    UnauthenticatedLoginRoute,
+    UnauthenticatedLogoutRoute,
+    UnauthenticatedIndexRoute,
+  }),
 })
 
 /* prettier-ignore-end */
@@ -122,9 +137,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/_authenticated",
-        "/_unauthenticated/login",
-        "/_unauthenticated/logout",
-        "/_unauthenticated/"
+        "/_unauthenticated"
       ]
     },
     "/_authenticated": {
@@ -134,14 +147,25 @@ export const routeTree = rootRoute.addChildren({
         "/_authenticated/queues/$id/"
       ]
     },
+    "/_unauthenticated": {
+      "filePath": "_unauthenticated.tsx",
+      "children": [
+        "/_unauthenticated/login",
+        "/_unauthenticated/logout",
+        "/_unauthenticated/"
+      ]
+    },
     "/_unauthenticated/login": {
-      "filePath": "_unauthenticated/login.tsx"
+      "filePath": "_unauthenticated/login.tsx",
+      "parent": "/_unauthenticated"
     },
     "/_unauthenticated/logout": {
-      "filePath": "_unauthenticated/logout.tsx"
+      "filePath": "_unauthenticated/logout.tsx",
+      "parent": "/_unauthenticated"
     },
     "/_unauthenticated/": {
-      "filePath": "_unauthenticated/index.tsx"
+      "filePath": "_unauthenticated/index.tsx",
+      "parent": "/_unauthenticated"
     },
     "/_authenticated/queues/": {
       "filePath": "_authenticated/queues/index.tsx",
