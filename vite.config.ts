@@ -7,31 +7,31 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [
-        react(),
-        checker({
-            typescript: true,
-        }),
-        tsconfigPaths(),
-        TanStackRouterVite(),
-        VitePWA({
-            manifest: {
-                name: "BunnyMQ",
-                icons: [
-                    {
-                        src: "/icon-192.png",
-                        type: "image/png",
-                        sizes: "192x192",
-                    },
-                    {
-                        src: "/icon-512.png",
-                        type: "image/png",
-                        sizes: "512x512",
-                    },
-                ],
-                start_url: "/",
-                display: "minimal-ui",
-            },
-        }),
-    ],
+  plugins: [
+    react(),
+    checker({
+      typescript: true,
+    }),
+    tsconfigPaths(),
+    TanStackRouterVite(),
+    VitePWA({
+      manifest: {
+        name: "BunnyMQ",
+        icons: [
+          {
+            src: "/icon-192.png",
+            type: "image/png",
+            sizes: "192x192",
+          },
+          {
+            src: "/icon-512.png",
+            type: "image/png",
+            sizes: "512x512",
+          },
+        ],
+        start_url: "/",
+        display: "minimal-ui",
+      },
+    }),
+  ],
 });

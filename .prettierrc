@@ -1,10 +1,10 @@
 {
-    "trailingComma": "all",
-    "quoteProps": "preserve",
-    "plugins": [
-        "@trivago/prettier-plugin-sort-imports",
-        "prettier-plugin-tailwindcss"
-    ],
-    "tailwindFunctions": ["clsx", "cn"],
-    "importOrder": ["^@/", "^[./]"]
+  "trailingComma": "all",
+  "quoteProps": "preserve",
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
+  ],
+  "tailwindFunctions": ["clsx", "cn"],
+  "importOrder": ["^@/", "^[./]"]
 }

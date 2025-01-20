@@ -6,15 +6,15 @@ import { useTheme } from "@/components/ThemeProvider";
 Light.registerLanguage("json", json);
 
 export type SyntaxHighlighterProps = {
-    children: string | string[];
+  children: string | string[];
 };
 
 export function SyntaxHighlighter({ children }: SyntaxHighlighterProps) {
-    const { appearance } = useTheme();
+  const { appearance } = useTheme();
 
-    return (
-        <Light language="json" style={appearance === "dark" ? vs2015 : vs}>
-            {children}
-        </Light>
-    );
+  return (
+    <Light language="json" style={appearance === "dark" ? vs2015 : vs}>
+      {children}
+    </Light>
+  );
 }

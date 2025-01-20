@@ -7,30 +7,30 @@ import { isAuthenticated } from "@/lib/auth";
 import { getCookie } from "@/lib/cookies";
 
 export const Route = createFileRoute("/_authenticated")({
-    beforeLoad: async ({ location }) => {
-        const authenticated = await isAuthenticated();
-        if (!authenticated) {
-            throw redirect({
-                to: "/login",
-                search: { next: location.href },
-            });
-        }
-    },
-    component: Authenticated,
+  beforeLoad: async ({ location }) => {
+    const authenticated = await isAuthenticated();
+    if (!authenticated) {
+      throw redirect({
+        to: "/login",
+        search: { next: location.href },
+      });
+    }
+  },
+  component: Authenticated,
 });
 
 function Authenticated() {
-    const environment = getCookie("environment");
+  const environment = getCookie("environment");
 
-    return (
-        <React.Fragment>
-            <NavigationBar
-                loggedIn={true}
-                environment={environmentNameSchema.parse(environment)}
-            />
-            <Layout>
-                <Outlet />
-            </Layout>
-        </React.Fragment>
-    );
+  return (
+    <React.Fragment>
+      <NavigationBar
+        loggedIn={true}
+        environment={environmentNameSchema.parse(environment)}
+      />
+      <Layout>
+        <Outlet />
+      </Layout>
+    </React.Fragment>
+  );
 }

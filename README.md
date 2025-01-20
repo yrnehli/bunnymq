@@ -10,13 +10,13 @@ A [modern web interface](https://yrnehli.github.io/bunnymq) to manage your Rabbi
 
 ## Features
 
--   Multiple environments 🌲
--   View queues 🔁
--   Purge/view messages 👀
--   Construct queue messages using TypeScript 🚧
--   Syntax highlighting 🎨
--   Pretty printing 💅
--   Dark mode 🌚
+- Multiple environments 🌲
+- View queues 🔁
+- Purge/view messages 👀
+- Construct queue messages using TypeScript 🚧
+- Syntax highlighting 🎨
+- Pretty printing 💅
+- Dark mode 🌚
 
 ## Installation
 

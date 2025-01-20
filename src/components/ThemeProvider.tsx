@@ -7,69 +7,69 @@ const themeSchema = z.enum(THEMES).catch("system");
 type Theme = z.infer<typeof themeSchema>;
 
 type ThemeProviderProps = {
-    children: React.ReactNode;
+  children: React.ReactNode;
 };
 
 type ThemeProviderState = {
-    appearance: Exclude<Theme, "system">;
-    theme: Theme;
-    setTheme: (theme: Theme) => void;
+  appearance: Exclude<Theme, "system">;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
 };
 
 const initialState: ThemeProviderState = {
-    appearance: "light",
-    theme: "system",
-    setTheme: () => null,
+  appearance: "light",
+  theme: "system",
+  setTheme: () => null,
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 const STORAGE_KEY = "theme";
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-    const [theme, setTheme] = useState<Theme>(() =>
-        themeSchema.parse(localStorage.getItem(STORAGE_KEY)),
-    );
+  const [theme, setTheme] = useState<Theme>(() =>
+    themeSchema.parse(localStorage.getItem(STORAGE_KEY)),
+  );
 
-    const appearance = expr(() => {
-        if (theme === "system") {
-            return window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-        }
+  const appearance = expr(() => {
+    if (theme === "system") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
 
-        return theme;
-    });
+    return theme;
+  });
 
-    useEffect(() => {
-        const root = window.document.documentElement;
-        root.classList.remove("light", "dark");
-        root.classList.add(appearance);
-    }, [appearance]);
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(appearance);
+  }, [appearance]);
 
-    const value = {
-        appearance,
-        theme,
-        setTheme: (theme: Theme) => {
-            localStorage.setItem(STORAGE_KEY, theme);
-            setTheme(theme);
-        },
-    };
+  const value = {
+    appearance,
+    theme,
+    setTheme: (theme: Theme) => {
+      localStorage.setItem(STORAGE_KEY, theme);
+      setTheme(theme);
+    },
+  };
 
-    return (
-        <ThemeProviderContext.Provider value={value}>
-            {children}
-        </ThemeProviderContext.Provider>
-    );
+  return (
+    <ThemeProviderContext.Provider value={value}>
+      {children}
+    </ThemeProviderContext.Provider>
+  );
 }
 
 export const useTheme = () => {
-    const context = useContext(ThemeProviderContext);
+  const context = useContext(ThemeProviderContext);
 
-    assert(
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        context !== undefined,
-        "useTheme must be used within a ThemeProvider",
-    );
+  assert(
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    context !== undefined,
+    "useTheme must be used within a ThemeProvider",
+  );
 
-    return context;
+  return context;
 };

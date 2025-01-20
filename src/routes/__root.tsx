@@ -5,23 +5,23 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 
 const queryClient = new QueryClient({
-    defaultOptions: { queries: { throwOnError: true } },
+  defaultOptions: { queries: { throwOnError: true } },
 });
 
 export const Route = createRootRoute({
-    component: () => (
-        <QueryClientProvider client={queryClient}>
-            <ThemeProvider>
-                <CatchBoundary
-                    getResetKey={() => "reset"}
-                    // eslint-disable-next-line no-console
-                    onCatch={(error) => console.error(error)}
-                    errorComponent={ErrorPage}
-                >
-                    <Outlet />
-                    <Toaster />
-                </CatchBoundary>
-            </ThemeProvider>
-        </QueryClientProvider>
-    ),
+  component: () => (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <CatchBoundary
+          getResetKey={() => "reset"}
+          // eslint-disable-next-line no-console
+          onCatch={(error) => console.error(error)}
+          errorComponent={ErrorPage}
+        >
+          <Outlet />
+          <Toaster />
+        </CatchBoundary>
+      </ThemeProvider>
+    </QueryClientProvider>
+  ),
 });

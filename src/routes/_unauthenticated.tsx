@@ -4,16 +4,16 @@ import { Layout } from "@/components/Layout";
 import { NavigationBar } from "@/components/NavigationBar";
 
 export const Route = createFileRoute("/_unauthenticated")({
-    component: Unauthenticated,
+  component: Unauthenticated,
 });
 
 function Unauthenticated() {
-    return (
-        <React.Fragment>
-            <NavigationBar loggedIn={false} />
-            <Layout>
-                <Outlet />
-            </Layout>
-        </React.Fragment>
-    );
+  return (
+    <React.Fragment>
+      <NavigationBar loggedIn={false} />
+      <Layout>
+        <Outlet />
+      </Layout>
+    </React.Fragment>
+  );
 }
